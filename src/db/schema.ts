@@ -1,11 +1,13 @@
 import { pgTable, text, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
 
+// Users table with role
 export const user = pgTable("user", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  role: text("role").default("user").notNull(), // 'user' | 'admin'
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -60,5 +62,43 @@ export const verification = pgTable("verification", {
     .notNull(),
 });
 
-// Export schema as object for Drizzle client
-export const schema = { user, session, account, verification };
+// Challenges table
+export const challenge = pgTable("challenge", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+// Photos table
+export const photo = pgTable("photo", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id),
+  challengeId: uuid("challenge_id")
+    .notNull()
+    .references(() => challenge.id),
+  imageUrl: text("image_url").notNull(),
+  caption: text("caption"),
+  isHidden: boolean("is_hidden").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+// Export schema
+export const schema = {
+  user,
+  session,
+  account,
+  verification,
+  challenge,
+  photo,
+};
