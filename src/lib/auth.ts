@@ -9,11 +9,18 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  advanced: {
+    database: {
+      generateId: false, // This will assume your database will generate the ID automatically
+    },
+  },
   user: {
     additionalFields: {
       role: {
         type: "string",
-        input: false,
+        required: false,
+        defaultValue: "user", // default role for new users
+        input: false, // users cannot set this themselves
       },
     },
   },
