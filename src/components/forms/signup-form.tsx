@@ -57,7 +57,7 @@ export function SignupForm() {
         email: values.email,
         password: values.password,
         name: values.email.split("@")[0],
-        callbackURL: "/",
+        callbackURL: "/home",
       });
 
       if (error?.code === "USER_ALREADY_EXISTS")
@@ -69,12 +69,11 @@ export function SignupForm() {
     onSuccess: (result) => {
       if (result.user) {
         toast.success("Signup successful!");
-        router.push("/"); // signup successful
+        router.push("/home"); // signup successful
       }
     },
     onError: (err: any) => {
       toast.error(err.message || "Login failed");
-      toast.error("right here");
     },
   });
 

@@ -59,9 +59,9 @@ export function LoginForm() {
     },
     onSuccess: (result) => {
       // `result` is the object returned from authClient
-      toast.success("Login successful!");
       if (result.user) {
-        router.push("/"); // login successful
+        toast.success("Login successful!");
+        router.push("/home"); // login successful
       }
     },
     onError: (error: any) => {
@@ -77,7 +77,7 @@ export function LoginForm() {
   const handleLoginWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: "/home",
     });
   };
 

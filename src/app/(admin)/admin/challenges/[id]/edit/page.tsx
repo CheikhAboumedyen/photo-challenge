@@ -1,0 +1,178 @@
+"use client";
+
+import { useEffect, useState, useTransition } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getChallengeById, updateChallenge } from "../../actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+
+export default function EditChallengePage() {
+  const router = useRouter();
+  const { id } = useParams(); // challenge ID from URL
+  const [isPending, startTransition] = useTransition();
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  // Load challenge data
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const challenge = await getChallengeById(id as string);
+        if (!challenge) {
+          toast.error("Challenge not found");
+          router.push("/admin/challenges");
+          return;
+        }
+
+        setFormData({
+          title: challenge.title,
+          description: challenge.description || "",
+          startDate: new Date(challenge.startDate).toISOString().slice(0, 16),
+          endDate: new Date(challenge.endDate).toISOString().slice(0, 16),
+        });
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load challenge");
+      }
+    }
+
+    fetchData();
+  }, [id, router]);
+
+  // Handle input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.title || !formData.startDate || !formData.endDate) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        await updateChallenge(id as string, formData);
+        toast.success("Challenge updated successfully!");
+        router.push("/admin/challenges");
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to update challenge.");
+      }
+    });
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <Card className="p-6">
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold text-gray-800">
+            Edit Challenge
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-gray-700">
+                Title
+              </Label>
+              <Input
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Challenge title"
+                className="bg-gray-50 border-gray-300"
+                required
+              />
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-gray-700">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Briefly describe the challenge"
+                className="bg-gray-50 border-gray-300"
+              />
+            </div>
+
+            {/* Dates */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <Label htmlFor="startDate" className="text-gray-700">
+                  Start Date
+                </Label>
+                <Input
+                  id="startDate"
+                  name="startDate"
+                  type="datetime-local"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  className="bg-gray-50 border-gray-300"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="endDate" className="text-gray-700">
+                  End Date
+                </Label>
+                <Input
+                  id="endDate"
+                  name="endDate"
+                  type="datetime-local"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                  className="bg-gray-50 border-gray-300"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex items-center justify-end gap-4 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push("/admin/challenges")}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-gray-900 text-white hover:bg-black"
+                disabled={isPending}
+              >
+                {isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

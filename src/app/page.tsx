@@ -1,6 +1,7 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "lucide-react";
 
 const images = [
   "/images/image1.jpg",
@@ -22,10 +23,24 @@ export default function Home() {
           </li>
           <li>Lang</li>
           <li>
-            <a href="/login">Login</a>
+            <Button
+              asChild
+              variant="outline"
+              className="cursor-pointer"
+              size="sm"
+            >
+              <a href="/login">Login</a>
+            </Button>
           </li>
           <li>
-            <a href="/signup">Signup</a>
+            <Button
+              asChild
+              variant="outline"
+              className="cursor-pointer"
+              size="sm"
+            >
+              <a href="/signup">Signup</a>
+            </Button>
           </li>
         </ul>
       </nav>
@@ -87,10 +102,10 @@ export default function Home() {
           transition={{ duration: 1, delay: 0.5 }}
           className="mt-12 flex space-x-4"
         >
-          <button className="px-6 py-3 bg-gray-800 text-white border  border-gray-700 rounded-lg hover:text-gray-800 hover:bg-gray-100 transition cursor-pointer">
+          <button className="px-6 py-3 bg-gray-700 text-white border  border-gray-700 rounded-lg hover:bg-gray-800 transition cursor-pointer">
             Get Started
           </button>
-          <button className="px-6 py-3 border border-gray-900 rounded-lg hover:text-white hover:bg-gray-800 transition cursor-pointer">
+          <button className="px-6 py-3 border border-gray-700 rounded-lg  hover:bg-gray-200 transition cursor-pointer">
             Learn More
           </button>
         </motion.div>
