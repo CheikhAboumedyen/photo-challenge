@@ -7,6 +7,7 @@ import { and, lte, gte } from "drizzle-orm";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import MySubmission from "@/components/my-submission";
 
 async function getActiveChallenge() {
   const now = new Date();
@@ -131,6 +132,11 @@ export default async function HomeDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* My Submission section (for logged-in users) */}
+        {isAuthed && !isAdmin && active && (
+          <MySubmission challengeId={active.id} />
+        )}
 
         {/* Optional note or quick links */}
         <div className="mt-6 text-sm text-gray-500">
