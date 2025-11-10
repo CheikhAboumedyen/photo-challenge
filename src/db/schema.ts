@@ -15,6 +15,8 @@ export const user = pgTable("user", {
     .notNull(),
 });
 
+// session Table
+
 export const session = pgTable("session", {
   id: uuid("id").defaultRandom().primaryKey(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -29,6 +31,8 @@ export const session = pgTable("session", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
+
+// account Table
 
 export const account = pgTable("account", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -93,6 +97,17 @@ export const photo = pgTable("photo", {
     .notNull(),
 });
 
+// Vote Table
+export const vote = pgTable("vote", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  photoId: uuid("photo_id")
+    .notNull()
+    .references(() => photo.id, { onDelete: "cascade" }),
+});
+
 // Export schema
 export const schema = {
   user,
@@ -101,4 +116,5 @@ export const schema = {
   verification,
   challenge,
   photo,
+  vote,
 };

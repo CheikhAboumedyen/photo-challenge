@@ -78,8 +78,7 @@ export default async function HomeDashboard() {
                 </>
               ) : (
                 <p className="text-sm text-gray-600">
-                  There is currently no active challenge. Check back soon or
-                  create one if you are an admin.
+                  There is currently no active challenge.
                 </p>
               )}
             </div>

@@ -5,7 +5,6 @@ import { db, schema } from "@/db";
 import { and, eq } from "drizzle-orm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 export default async function MySubmission({
   challengeId,
@@ -34,9 +33,9 @@ export default async function MySubmission({
       <div className="mt-6 text-sm text-gray-600">
         <p>You haven't submitted a photo for this challenge yet.</p>
         <div className="mt-3">
-          <Link href={`/challenges/${challengeId}/upload`}>
+          {/* <Link href={`/challenges/${challengeId}/upload`}>
             <Button className="bg-gray-900 text-white">Upload now</Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     );
@@ -70,9 +69,9 @@ export default async function MySubmission({
               {/* We will call client-side fetch to delete; below I provide a simple link to delete via client */}
             </form>
 
-            <Link href={`/challenges/${challengeId}`}>
+            {/* <Link href={`/challenges/${challengeId}`}>
               <Button variant="outline">View & Vote</Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
