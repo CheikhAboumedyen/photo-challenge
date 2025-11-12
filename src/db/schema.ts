@@ -1,3 +1,4 @@
+// src\db\schema.ts
 import { pgTable, text, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
 
 // Users table with role

@@ -1,3 +1,4 @@
+// src\app\(admin)\admin\challenges\[id]\edit\page.tsx
 "use client";
 
 import { useEffect, useState, useTransition } from "react";

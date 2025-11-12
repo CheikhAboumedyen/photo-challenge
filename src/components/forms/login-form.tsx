@@ -42,6 +42,7 @@ export function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
+      // Add full name
     },
   });
 

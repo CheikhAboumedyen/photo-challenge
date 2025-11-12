@@ -1,4 +1,3 @@
-// src\app\challenges\[id]\actions.ts
 "use server";
 
 import { auth } from "@/lib/auth";
@@ -8,10 +7,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function voteAction(photoId: string) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+  const session = await auth.api.getSession({ headers: await headers() });
   const userId = session?.user?.id;
   if (!userId) throw new Error("Unauthorized");
 
@@ -58,10 +54,7 @@ export async function voteAction(photoId: string) {
   }
 
   // Insert the new vote
-  await db.insert(schema.vote).values({
-    userId,
-    photoId,
-  });
+  await db.insert(schema.vote).values({ userId, photoId });
 
   revalidatePath(`/challenges/${photo.challengeId}`);
 
@@ -71,7 +64,7 @@ export async function voteAction(photoId: string) {
   };
 }
 
-// Fetch photos with vote count
+// ✅ Fetch only visible photos + show user name
 export async function getPhotosWithVotes(challengeId: string) {
   const rows = await db
     .select({
@@ -80,14 +73,19 @@ export async function getPhotosWithVotes(challengeId: string) {
       caption: schema.photo.caption,
       userId: schema.photo.userId,
       createdAt: schema.photo.createdAt,
-      userEmail: schema.user.email,
+      userName: schema.user.name, // 👈 get name instead of email
       voteCount: sql<number>`COUNT(${schema.vote.id})`.as("vote_count"),
     })
     .from(schema.photo)
     .leftJoin(schema.user, eq(schema.user.id, schema.photo.userId))
     .leftJoin(schema.vote, eq(schema.vote.photoId, schema.photo.id))
-    .where(eq(schema.photo.challengeId, challengeId))
-    .groupBy(schema.photo.id, schema.user.email)
+    .where(
+      and(
+        eq(schema.photo.challengeId, challengeId),
+        eq(schema.photo.isHidden, false) // 👈 filter out hidden photos
+      )
+    )
+    .groupBy(schema.photo.id, schema.user.name)
     .orderBy(sql`COUNT(${schema.vote.id}) DESC`);
 
   return rows;

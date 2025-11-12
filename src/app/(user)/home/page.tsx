@@ -7,7 +7,7 @@ import { and, lte, gte } from "drizzle-orm";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import MySubmission from "@/components/my-submission";
+import MySubmission from "@/components/my-submission/my-submission";
 
 async function getActiveChallenge() {
   const now = new Date();
@@ -105,7 +105,7 @@ export default async function HomeDashboard() {
               {isAuthed && !isAdmin && active && (
                 <>
                   <Link href={`/challenges/${active.id}/upload`}>
-                    <Button className="bg-gray-900 text-white hover:bg-black">
+                    <Button className="bg-gray-800 text-white hover:bg-black cursor-pointer">
                       Upload Photo
                     </Button>
                   </Link>
