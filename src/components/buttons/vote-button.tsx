@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { voteAction } from "@/app/challenges/[id]/actions";
+import { voteAction } from "@/app/(user)/challenges/[id]/actions";
 import { useRouter } from "next/navigation";
 
 interface VoteButtonProps {
@@ -21,7 +21,7 @@ export function VoteButton({ photoId, disabled, isVoted }: VoteButtonProps) {
       try {
         await voteAction(photoId);
         toast.success("Vote updated!");
-        router.refresh(); // ✅ forces full re-render with new data
+        router.refresh(); // forces full re-render with new data
       } catch (err: any) {
         toast.error(err.message || "Vote failed");
       }
@@ -38,7 +38,13 @@ export function VoteButton({ photoId, disabled, isVoted }: VoteButtonProps) {
           : "bg-gray-900 hover:bg-black text-white"
       }`}
     >
-      {isPending ? "Processing..." : isVoted ? "Unvote" : "Vote"}
+      {isPending
+        ? "Processing..."
+        : disabled
+        ? "your own"
+        : isVoted
+        ? "Unvote"
+        : "Vote"}
     </Button>
   );
 }

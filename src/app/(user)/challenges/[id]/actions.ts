@@ -1,5 +1,4 @@
 "use server";
-
 import { auth } from "@/lib/auth";
 import { db, schema } from "@/db";
 import { eq, sql, and } from "drizzle-orm";
@@ -64,7 +63,7 @@ export async function voteAction(photoId: string) {
   };
 }
 
-// ✅ Fetch only visible photos + show user name
+//  Fetch only visible photos + show user name
 export async function getPhotosWithVotes(challengeId: string) {
   const rows = await db
     .select({
@@ -73,7 +72,7 @@ export async function getPhotosWithVotes(challengeId: string) {
       caption: schema.photo.caption,
       userId: schema.photo.userId,
       createdAt: schema.photo.createdAt,
-      userName: schema.user.name, // 👈 get name instead of email
+      userName: schema.user.name, //  get name instead of email
       voteCount: sql<number>`COUNT(${schema.vote.id})`.as("vote_count"),
     })
     .from(schema.photo)
@@ -82,11 +81,12 @@ export async function getPhotosWithVotes(challengeId: string) {
     .where(
       and(
         eq(schema.photo.challengeId, challengeId),
-        eq(schema.photo.isHidden, false) // 👈 filter out hidden photos
+        eq(schema.photo.isHidden, false) // filter out hidden photos
       )
     )
     .groupBy(schema.photo.id, schema.user.name)
-    .orderBy(sql`COUNT(${schema.vote.id}) DESC`);
+    // .orderBy(sql`COUNT(${schema.vote.id}) DESC`);
+    .orderBy(sql`${schema.photo.createdAt} DESC`);
 
   return rows;
 }

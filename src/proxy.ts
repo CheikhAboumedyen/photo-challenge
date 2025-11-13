@@ -7,32 +7,37 @@ const PUBLIC_PATHS = ["/", "/login", "/signup"];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Always allow static files, _next, assets etc
-  if (
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/static/") ||
-    pathname.startsWith("/favicon.ico") ||
-    pathname.includes(".") // dot means maybe file extension
-  ) {
-    return NextResponse.next();
-  }
+  // // Allow static, assets, _next etc
+  // if (
+  //   pathname.startsWith("/_next/") ||
+  //   pathname.startsWith("/static/") ||
+  //   pathname.startsWith("/favicon.ico") ||
+  //   pathname.includes(".")
+  // ) {
+  //   return NextResponse.next();
+  // }
 
-  // Allow public page routes
+  // Allow public pages
   if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();
   }
 
-  // Check session
+  // Check user session
   const session = await auth.api.getSession({ headers: request.headers });
-
-  // Not logged in → redirect to home
   if (!session?.user) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Protect admin routes
-  if (pathname.startsWith("/admin") && session.user.role !== "admin") {
+  const role = session.user.role;
+
+  // Protect admin-exclusive area
+  if (pathname.startsWith("/admin") && role !== "admin") {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Restrict: /challenges/[id] should be accessed only by normal users
+  if (pathname.startsWith("/challenges/") && role === "admin") {
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   // Otherwise allow
@@ -40,8 +45,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Run this proxy on all “page‑like” routes except APIs and static assets
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

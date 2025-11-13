@@ -1,3 +1,4 @@
+// src\app\(admin)\admin\challenges\page.tsx
 import Link from "next/link";
 import { getChallenges, deleteChallenge } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
 
-// ✅ Utility to compute challenge status
+//  Utility to compute challenge status
 function getStatus(startDate: Date, endDate: Date) {
   const now = new Date();
   if (startDate <= now && now <= endDate) return "Active";
