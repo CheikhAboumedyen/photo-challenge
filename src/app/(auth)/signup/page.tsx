@@ -1,3 +1,4 @@
+// src\app\(auth)\signup\page.tsx
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";

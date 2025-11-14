@@ -76,6 +76,26 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* ===== PixiVerse Brand Theme ===== */
+  --pv-primary: #6366f1; /* indigo main */
+  --pv-secondary: #f472b6; /* pink accent */
+  --pv-light: #eef1ff; /* soft background */
+  --pv-pastel: #f4e8ff; /* subtle pink tint */
+  --pv-dark: #0d0d0d; /* dark base */
+  --pv-gradient: linear-gradient(
+    to bottom right,
+    var(--pv-light),
+    var(--pv-pastel),
+    white
+  );
+  --pv-accent-gradient: linear-gradient(
+    to right,
+    var(--pv-primary),
+    #8b5cf6,
+    var(--pv-secondary)
+  );
+  --pv-shadow: 0 8px 30px -10px rgba(99, 102, 241, 0.25);
+  --pv-radius: 1.25rem;
 }
 
 .dark {
@@ -110,6 +130,16 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  /* ===== PixiVerse Dark Theme ===== */
+  --pv-primary: #a5b4fc; /* soft indigo */
+  --pv-secondary: #f9a8d4; /* pink accent */
+  --pv-light: #18181b; /* dark gray base */
+  --pv-pastel: #27272a;
+  --pv-dark: #0d0d0d;
+  --pv-gradient: linear-gradient(to bottom right, #1f1f21, #2b2b2d, #18181b);
+  --pv-accent-gradient: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+  --pv-shadow: 0 0 30px -10px rgba(165, 180, 252, 0.25);
+  --pv-radius: 1.25rem;
 }
 
 @layer base {
@@ -118,5 +148,52 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: var(--pv-gradient);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Inter", ui-sans-serif, system-ui;
+  }
+
+  a {
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--pv-primary);
+  }
+
+  button {
+    border-radius: var(--pv-radius);
+  }
+}
+
+/* ===== PixiVerse Utility Classes ===== */
+@layer utilities {
+  .bg-pv-gradient {
+    background: var(--pv-gradient);
+  }
+
+  .bg-pv-accent {
+    background: var(--pv-accent-gradient);
+  }
+
+  .text-pv-primary {
+    color: var(--pv-primary);
+  }
+
+  .text-pv-secondary {
+    color: var(--pv-secondary);
+  }
+
+  .shadow-pv {
+    box-shadow: var(--pv-shadow);
+  }
+
+  .rounded-pv {
+    border-radius: var(--pv-radius);
   }
 }

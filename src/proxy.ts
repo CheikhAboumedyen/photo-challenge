@@ -7,16 +7,6 @@ const PUBLIC_PATHS = ["/", "/login", "/signup"];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // // Allow static, assets, _next etc
-  // if (
-  //   pathname.startsWith("/_next/") ||
-  //   pathname.startsWith("/static/") ||
-  //   pathname.startsWith("/favicon.ico") ||
-  //   pathname.includes(".")
-  // ) {
-  //   return NextResponse.next();
-  // }
-
   // Allow public pages
   if (PUBLIC_PATHS.includes(pathname)) {
     return NextResponse.next();

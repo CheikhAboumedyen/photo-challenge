@@ -16,7 +16,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,8 +23,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { FcGoogle } from "react-icons/fc";
 
-// 1️- Validation schema
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
@@ -36,17 +35,14 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const router = useRouter();
 
-  // 2️- React Hook Form setup
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
-      // Add full name
     },
   });
 
-  // 3️- React Query mutation for submission
   const mutation = useMutation({
     mutationFn: async (values: LoginFormValues) => {
       const { data, error } = await authClient.signIn.email({
@@ -59,10 +55,9 @@ export function LoginForm() {
       return data;
     },
     onSuccess: (result) => {
-      // `result` is the object returned from authClient
       if (result.user) {
         toast.success("Login successful!");
-        router.push("/home"); // login successful
+        router.push("/home");
       }
     },
     onError: (error: any) => {
@@ -74,7 +69,6 @@ export function LoginForm() {
     mutation.mutate(values);
   };
 
-  // 4- Login with google
   const handleLoginWithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
@@ -82,51 +76,61 @@ export function LoginForm() {
     });
   };
 
-  // 5- UI
   return (
-    <div className={cn("flex flex-col gap-6")}>
-      <Card className="w-[380px] shadow-md">
-        <CardHeader>
-          <CardTitle className="text-center">Login to your account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your email below to login to your account
+    <div className={cn("flex flex-col gap-6 items-center")}>
+      <Card className="w-full max-w-md border-none shadow-pv bg-white/70 backdrop-blur-lg rounded-pv">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-semibold text-pv-primary">
+            Welcome Back
+          </CardTitle>
+          <CardDescription className="text-gray-500">
+            Login to your{" "}
+            <span className="text-pv-secondary font-medium">PixiVerse</span>{" "}
+            account
           </CardDescription>
         </CardHeader>
+
         <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+                <FieldLabel htmlFor="email" className="text-gray-700">
+                  Email
+                </FieldLabel>
                 <Input
                   id="email"
-                  type="text"
+                  type="email"
                   placeholder="m@example.com"
                   {...form.register("email")}
+                  className="border-gray-300 focus:border-pv-primary focus:ring-pv-primary/30"
                 />
                 {form.formState.errors.email && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-red-500 mt-1">
                     {form.formState.errors.email.message}
                   </p>
                 )}
               </Field>
 
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
+                <div className="flex items-center justify-between">
+                  <FieldLabel htmlFor="password" className="text-gray-700">
+                    Password
+                  </FieldLabel>
                   <a
                     href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    className="text-sm text-pv-primary hover:underline"
                   >
-                    Forgot your password?
+                    Forgot?
                   </a>
                 </div>
                 <Input
                   id="password"
                   type="password"
                   {...form.register("password")}
+                  className="border-gray-300 focus:border-pv-primary focus:ring-pv-primary/30"
                 />
                 {form.formState.errors.password && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-red-500 mt-1">
                     {form.formState.errors.password.message}
                   </p>
                 )}
@@ -135,27 +139,30 @@ export function LoginForm() {
               <Field>
                 <Button
                   type="submit"
-                  className="w-full cursor-pointer"
                   disabled={mutation.isPending}
+                  className="w-full bg-pv-primary hover:bg-pv-secondary text-pv-primary transition shadow-pv"
                 >
                   {mutation.isPending ? "Logging in..." : "Login"}
                 </Button>
+
                 <Button
-                  variant="outline"
                   type="button"
+                  variant="outline"
                   onClick={handleLoginWithGoogle}
-                  className="w-full mt-2 cursor-pointer"
+                  className="w-full mt-3 flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
                 >
+                  <FcGoogle className="w-5 h-5" />
                   Login with Google
                 </Button>
-                <FieldDescription className="text-center mt-3">
-                  Don&apos;t have an account?{" "}
-                  <button
-                    type="button"
-                    className="underline hover:text-primary transition cursor-pointer"
+
+                <FieldDescription className="text-center mt-5 text-gray-600">
+                  Don’t have an account?{" "}
+                  <a
+                    href="/signup"
+                    className="text-pv-primary font-medium hover:underline"
                   >
-                    <a href="/signup">Sign up</a>
-                  </button>
+                    Sign up
+                  </a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

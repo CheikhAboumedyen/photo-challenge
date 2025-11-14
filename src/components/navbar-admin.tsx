@@ -22,7 +22,7 @@ export function NavbarAdmin() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 text-gray-800">
         {/* Left - Logo */}
         <Link href="/admin" className="font-semibold text-lg hover:opacity-80">
-          Admin Panel
+          PixiVerse
         </Link>
 
         {/* Center - Nav Links */}
