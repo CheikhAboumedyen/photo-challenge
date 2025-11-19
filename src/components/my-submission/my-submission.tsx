@@ -1,8 +1,9 @@
-// src\components\my-submission\my-submission.tsx
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { db, schema } from "@/db";
 import { and, eq, sql } from "drizzle-orm";
+import { Button } from "@/components/ui/button";
 import MySubmissionClient from "./my-submission-client";
 
 export default async function MySubmission({
@@ -22,6 +23,7 @@ export default async function MySubmission({
       caption: schema.photo.caption,
       createdAt: schema.photo.createdAt,
       votes: sql<number>`COUNT(${schema.vote.id})`.as("votes"),
+      challengeId: schema.photo.challengeId,
     })
     .from(schema.photo)
     .leftJoin(schema.vote, eq(schema.vote.photoId, schema.photo.id))
@@ -37,8 +39,25 @@ export default async function MySubmission({
   const photo = rows[0];
   if (!photo) {
     return (
-      <div className="mt-6 text-sm text-gray-600">
-        <p>You haven&apos;t submitted a photo for this challenge yet.</p>
+      <div className="rounded-4xl border border-nav-border/40 bg-panel/80 p-6 text-brand-foreground shadow-[0_20px_45px_rgba(2,6,23,0.65)]">
+        <p className="text-sm uppercase tracking-[0.4em] text-white/60">
+          My submission
+        </p>
+        <h3 className="mt-3 text-2xl font-semibold text-white">
+          No upload yet
+        </h3>
+        <p className="text-sm text-white/70">
+          You haven&apos;t submitted for this brief. Upload one image with
+          lighting and story notes to join voting.
+        </p>
+        <Button
+          asChild
+          className="mt-6 h-11 w-full rounded-full bg-brand-gradient text-brand-on-primary hover:opacity-90"
+        >
+          <Link href={`/challenges/${challengeId}/upload`}>
+            Upload your photo
+          </Link>
+        </Button>
       </div>
     );
   }

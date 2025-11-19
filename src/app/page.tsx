@@ -1,262 +1,271 @@
+// src/app/page.tsx
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, PlayCircle, Calendar } from "lucide-react";
+import {
+  ArrowRight,
+  Camera,
+  CalendarRange,
+  Crown,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+
+const stats = [
+  { value: "8.4K", label: "Active member" },
+  { value: "162K", label: "Photos critiqued" },
+  { value: "82", label: "Challenges" },
+];
+
+const highlights = [
+  {
+    title: "Curated prompts",
+    description:
+      "Weekly portrait briefs from editorial judges keep ideas fresh.",
+    icon: Sparkles,
+  },
+  {
+    title: "Story-first uploads",
+    description: "Attach lighting setups, lenses, and behind-the-scenes notes.",
+    icon: Camera,
+  },
+  {
+    title: "Community learning",
+    description: "Blind voting plus feedback rounds grow every participant.",
+    icon: Users,
+  },
+];
+
+const timeline = [
+  {
+    title: "Submit",
+    range: "Mon – Thu",
+    copy: "Drop one portrait per challenge—quality over quantity.",
+  },
+  {
+    title: "Vote",
+    range: "Fri – Sat",
+    copy: "Blind voting keeps things fair and surfaces hidden gems.",
+  },
+  {
+    title: "Celebrate",
+    range: "Sun",
+    copy: "Winners, critiques, and livestream breakdowns with the judges.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#f8f9fb] via-[#eef1ff] to-[#f4e8ff] text-gray-900 flex flex-col">
-      {/* Hero Section */}
-      <main className="flex flex-col lg:flex-row items-center justify-between flex-1 max-w-7xl mx-auto px-8 py-12 gap-12">
-        {/* Left Side */}
-        <div className="flex-1 text-left space-y-6">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-gray-900"
-          >
-            Creative <br />
-            <span className="text-indigo-500">Portraits</span>
-          </motion.h1>
+    <div className="relative isolate min-h-screen overflow-hidden bg-slate-950 text-white">
+      <div className="pointer-events-none absolute inset-0 opacity-70">
+        <div className="absolute inset-y-0 left-1/2 h-full w-160 -translate-x-1/2 rounded-full bg-indigo-500/30 blur-[140px]" />
+      </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-gray-600 text-lg max-w-md"
-          >
-            Join our vibrant community where photographers and artists
-            collaborate, share ideas, and challenge each other to create
-            extraordinary shots.
-          </motion.p>
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 1 }}
-            className="flex items-center gap-4 pt-4"
-          >
-            <Button
-              size="lg"
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-full flex items-center gap-2"
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 pb-24 pt-16 sm:px-6 lg:gap-20 lg:px-8 lg:pt-24">
+        <section className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
+          <div className="space-y-8">
+            <Badge
+              variant="secondary"
+              className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/90 backdrop-blur"
             >
-              <ArrowRight size={18} />
-              Get Started
-            </Button>
+              New briefs drop every Monday
+            </Badge>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-balance text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
             >
-              <PlayCircle size={18} />
-              Gallery View
-            </Button>
-          </motion.div>
+              Portrait challenges for artists who want to grow together.
+            </motion.h1>
 
-          {/* Appointment Section */}
-          {/* <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 1 }}
-            className="flex items-center gap-3 pt-8"
-          >
-            <div className="p-3 rounded-full bg-white shadow-sm">
-              <Calendar className="text-indigo-500" size={20} />
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-800">Appointment</h4>
-              <p className="text-sm text-gray-500">Book Now</p>
-            </div>
-          </motion.div> */}
-        </div>
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-lg text-slate-300"
+            >
+              Upload one photo, receive blind feedback, and climb a transparent
+              leaderboard built for photographers—not influencers.
+            </motion.p>
 
-        {/* Right Side Illustration */}
-        <div className="flex-1 flex justify-center relative">
+            <div className="flex flex-wrap gap-4">
+              <Button
+                size="lg"
+                className="rounded-full bg-indigo-500 px-7 text-base font-medium hover:bg-indigo-600"
+                asChild
+              >
+                <Link href="/signup">
+                  Join the next drop
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                className="rounded-full border-white/20 bg-white/10 text-white hover:bg-white/20"
+                asChild
+              >
+                <Link href="/leaderboard">See the leaderboard</Link>
+              </Button>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-3">
+              {stats.map((item) => (
+                <div key={item.label}>
+                  <p className="text-3xl font-semibold text-white">
+                    {item.value}
+                  </p>
+                  <p className="text-sm uppercase tracking-wide text-slate-400">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.93 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="w-[320px] h-[420px] bg-white rounded-4xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] flex items-center justify-center relative overflow-hidden"
+            transition={{ duration: 0.6 }}
+            className="relative isolate overflow-hidden rounded-4xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur"
           >
-            <div className="absolute inset-0 bg-linear-to-br from-indigo-100 via-purple-100 to-pink-100" />
-            <div className="relative text-center">
-              <div className="w-20 h-20 bg-linear-to-br from-indigo-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-6">
-                <ArrowRight size={30} className="text-white" />
+            <div className="space-y-6">
+              <div>
+                <p className="text-sm uppercase tracking-[0.4em] text-slate-300">
+                  Next drop
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold text-white">
+                  Neon Portrait Storytelling
+                </h2>
+                <p className="text-sm text-slate-300">
+                  Submit between Mon 09:00 and Thu 23:00 UTC
+                </p>
               </div>
-              <h3 className="font-semibold text-lg text-gray-800 mb-2">
-                The largest photo gallery
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Explore the creativity of our members
-              </p>
+
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4">
+                <div className="flex items-center justify-between text-sm text-slate-200">
+                  <span>Prize</span>
+                  <span>$500 gear grant</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between text-sm text-slate-200">
+                  <span>Guest judge</span>
+                  <span>Harper Lin</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+                <div className="flex items-center gap-3 text-slate-200">
+                  <CalendarRange className="h-5 w-5 text-indigo-300" />
+                  Voting: Fri – Sat
+                </div>
+                <div className="flex items-center gap-3 text-slate-200">
+                  <ShieldCheck className="h-5 w-5 text-indigo-300" />
+                  Blind review to remove bias
+                </div>
+                <div className="flex items-center gap-3 text-slate-200">
+                  <Crown className="h-5 w-5 text-indigo-300" />
+                  Sunday livestream results
+                </div>
+              </div>
             </div>
           </motion.div>
-        </div>
-      </main>
+        </section>
 
-      {/* Footer */}
-      <footer className="text-center text-gray-500 py-6 text-sm border-t border-gray-200">
-        © 2025 PhotoChallenge. All rights reserved.
-      </footer>
+        <section aria-labelledby="highlights" className="space-y-6">
+          <div>
+            <h2 id="highlights" className="text-2xl font-semibold text-white">
+              Why creators stick around
+            </h2>
+            <p className="text-slate-400">
+              Thoughtful prompts, transparent judging, and tooling for serious
+              portrait makers.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {highlights.map((highlight) => (
+              <Card
+                key={highlight.title}
+                className="border-white/10 bg-white/5 text-white"
+              >
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+                    <highlight.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{highlight.title}</h3>
+                    <p className="text-sm text-slate-300">
+                      {highlight.description}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="timeline" className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <h2 id="timeline" className="text-2xl font-semibold text-white">
+              Weekly rhythm
+            </h2>
+            <p className="text-slate-400">
+              Everyone shares the same cadence—submit, vote, learn, repeat.
+            </p>
+          </div>
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
+            <div className="grid gap-6 md:grid-cols-3">
+              {timeline.map((step) => (
+                <div key={step.title} className="space-y-2">
+                  <p className="text-sm font-medium text-indigo-200">
+                    {step.range}
+                  </p>
+                  <h3 className="text-xl font-semibold text-white">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-slate-300">{step.copy}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="overflow-hidden rounded-3xl border border-white/10 bg-linear-to-r from-indigo-600 via-purple-600 to-pink-500 p-10 text-center shadow-2xl">
+          <div className="mx-auto flex max-w-3xl flex-col gap-6">
+            <h3 className="text-3xl font-semibold text-white">
+              Ready to host a community challenge?
+            </h3>
+            <p className="text-white/90">
+              Spin up a moderated challenge in minutes. Enable uploads, voting
+              windows, and Cloudinary-powered reviews out of the box.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="rounded-full bg-white text-indigo-600"
+                asChild
+              >
+                <Link href="/signup">Create an account</Link>
+              </Button>
+              <Button
+                size="lg"
+                className="rounded-full border-white/40 bg-transparent text-white hover:bg-white/20"
+                asChild
+              >
+                <Link href="/docs">Browse documentation</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
-
-// "use client";
-
-// import { Button } from "@/components/ui/button";
-// import { ArrowRight, PlayCircle, Calendar } from "lucide-react";
-// import { motion } from "framer-motion";
-
-// export default function Home() {
-//   return (
-//     <div className="min-h-screen bg-linear-to-br from-[#f8f9fb] via-[#eef1ff] to-[#f4e8ff] text-gray-900 flex flex-col">
-//       {/* Navbar */}
-//       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full">
-//         <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-//           Photo<span className="text-indigo-500">Challenge</span>
-//         </h1>
-
-//         <ul className="hidden md:flex items-center space-x-8 text-sm font-medium">
-//           <li>
-//             <a href="#" className="hover:text-indigo-500 transition">
-//               Home
-//             </a>
-//           </li>
-//           <li>
-//             <a href="#" className="hover:text-indigo-500 transition">
-//               Create
-//             </a>
-//           </li>
-//           <li>
-//             <a href="#" className="hover:text-indigo-500 transition">
-//               Plans
-//             </a>
-//           </li>
-//           <li>
-//             <a href="#" className="hover:text-indigo-500 transition">
-//               About
-//             </a>
-//           </li>
-//           <li>
-//             <a href="#" className="hover:text-indigo-500 transition">
-//               Contact
-//             </a>
-//           </li>
-//         </ul>
-
-//         <div className="flex items-center space-x-4">
-//           <Button variant="outline" size="sm" className="border-gray-300">
-//             Login
-//           </Button>
-//           <Button
-//             size="sm"
-//             className="bg-indigo-500 hover:bg-indigo-600 text-white"
-//           >
-//             Sign up
-//           </Button>
-//         </div>
-//       </nav>
-
-//       {/* Hero Section */}
-//       <main className="flex flex-col lg:flex-row items-center justify-between flex-1 max-w-7xl mx-auto px-8 py-12 gap-12">
-//         {/* Left Side */}
-//         <div className="flex-1 text-left space-y-6">
-//           <motion.h1
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.8 }}
-//             className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tight text-gray-900"
-//           >
-//             Creative <br />
-//             <span className="text-indigo-500">Portraits</span>
-//           </motion.h1>
-
-//           <motion.p
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 1, delay: 0.2 }}
-//             className="text-gray-600 text-lg max-w-md"
-//           >
-//             Join our vibrant community where photographers and artists
-//             collaborate, share ideas, and challenge each other to create
-//             extraordinary shots.
-//           </motion.p>
-
-//           {/* Action Buttons */}
-//           <motion.div
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             transition={{ delay: 0.4, duration: 1 }}
-//             className="flex items-center gap-4 pt-4"
-//           >
-//             <Button
-//               size="lg"
-//               className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-full flex items-center gap-2"
-//             >
-//               <ArrowRight size={18} />
-//               Get Started
-//             </Button>
-
-//             <Button
-//               variant="outline"
-//               size="lg"
-//               className="rounded-full border-gray-300 text-gray-700 hover:bg-gray-100 flex items-center gap-2"
-//             >
-//               <PlayCircle size={18} />
-//               Gallery View
-//             </Button>
-//           </motion.div>
-
-//           {/* Appointment Section */}
-//           <motion.div
-//             initial={{ opacity: 0 }}
-//             animate={{ opacity: 1 }}
-//             transition={{ delay: 0.6, duration: 1 }}
-//             className="flex items-center gap-3 pt-8"
-//           >
-//             <div className="p-3 rounded-full bg-white shadow-sm">
-//               <Calendar className="text-indigo-500" size={20} />
-//             </div>
-//             <div>
-//               <h4 className="font-semibold text-gray-800">Appointment</h4>
-//               <p className="text-sm text-gray-500">Book Now</p>
-//             </div>
-//           </motion.div>
-//         </div>
-
-//         {/* Right Side Illustration */}
-//         <div className="flex-1 flex justify-center relative">
-//           <motion.div
-//             initial={{ opacity: 0, scale: 0.9 }}
-//             animate={{ opacity: 1, scale: 1 }}
-//             transition={{ duration: 1 }}
-//             className="w-[320px] h-[420px] bg-white rounded-4xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] flex items-center justify-center relative overflow-hidden"
-//           >
-//             <div className="absolute inset-0 bg-linear-to-br from-indigo-100 via-purple-100 to-pink-100" />
-//             <div className="relative text-center">
-//               <div className="w-20 h-20 bg-linear-to-br from-indigo-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-6">
-//                 <ArrowRight size={30} className="text-white" />
-//               </div>
-//               <h3 className="font-semibold text-lg text-gray-800 mb-2">
-//                 The largest photo gallery
-//               </h3>
-//               <p className="text-gray-500 text-sm">
-//                 Explore the creativity of our members
-//               </p>
-//             </div>
-//           </motion.div>
-//         </div>
-//       </main>
-
-//       {/* Footer */}
-//       <footer className="text-center text-gray-500 py-6 text-sm border-t border-gray-200">
-//         © 2025 PhotoChallenge. All rights reserved.
-//       </footer>
-//     </div>
-//   );
-// }

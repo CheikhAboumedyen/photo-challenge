@@ -1,9 +1,9 @@
+// src/app/(user)/leaderboard/actions.ts
 "use server";
 
 import { db, schema } from "@/db";
-import { lte, gte, eq, sql, and, desc } from "drizzle-orm";
+import { lte, gte, eq, sql, and } from "drizzle-orm";
 
-// Fetch active challenge
 export async function getActiveChallenge() {
   const now = new Date();
   const rows = await db
@@ -20,13 +20,15 @@ export async function getActiveChallenge() {
   return rows[0] ?? null;
 }
 
-// Fetch leaderboard for a challenge (top 3 users by votes)
 export async function getLeaderboardForChallenge(challengeId: string) {
   const rows = await db
     .select({
       userId: schema.user.id,
       userName: schema.user.name,
       voteCount: sql<number>`COUNT(${schema.vote.id})`.as("vote_count"),
+      photoId: schema.photo.id,
+      photoUrl: schema.photo.imageUrl,
+      photoCaption: schema.photo.caption,
     })
     .from(schema.vote)
     .leftJoin(schema.photo, eq(schema.photo.id, schema.vote.photoId))
@@ -37,14 +39,19 @@ export async function getLeaderboardForChallenge(challengeId: string) {
         eq(schema.photo.isHidden, false)
       )
     )
-    .groupBy(schema.user.id, schema.user.name)
+    .groupBy(
+      schema.user.id,
+      schema.user.name,
+      schema.photo.id,
+      schema.photo.imageUrl,
+      schema.photo.caption
+    )
     .orderBy(sql`COUNT(${schema.vote.id}) DESC`)
     .limit(3);
 
   return rows;
 }
 
-// Fetch past challenges with top 3 photos each
 export async function getPastChallengesWithTopPhotos() {
   const now = new Date();
   const challenges = await db

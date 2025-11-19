@@ -1,5 +1,6 @@
-// src\components\my-submission\my-submission-client.tsx
 "use client";
+
+import Link from "next/link";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -26,6 +27,7 @@ export default function MySubmissionClient({
     caption: string | null;
     createdAt: string;
     votes: number | null;
+    challengeId: string;
   };
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -52,37 +54,58 @@ export default function MySubmissionClient({
   }
 
   return (
-    <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border">
-      <h3 className="text-sm font-medium text-gray-800 mb-3">My Submission</h3>
-
-      <div className="flex flex-col md:flex-row gap-4 items-start">
-        <div className="w-full md:w-48 h-48 bg-gray-100 rounded-lg overflow-hidden">
+    <div className="rounded-4xl border border-nav-border/40 bg-panel/90 p-6 text-brand-foreground shadow-[0_20px_45px_rgba(2,6,23,0.65)]">
+      <div className="flex flex-col gap-5 lg:flex-row">
+        <div className="relative w-full overflow-hidden rounded-2xl border border-white/10 bg-black/20 lg:w-56">
           <img
             src={photo.imageUrl}
             alt={photo.caption || "My submission"}
-            className="w-full h-full object-cover"
+            className="aspect-square w-full object-cover"
           />
         </div>
+        <div className="flex-1 space-y-4">
+          <div>
+            <p className="text-sm uppercase tracking-[0.4em] text-white/60">
+              My submission
+            </p>
+            <h3 className="mt-2 text-2xl font-semibold text-white">
+              {photo.caption || "Untitled portrait"}
+            </h3>
+            <p className="text-sm text-white/70">
+              Submitted{" "}
+              {formatDistanceToNowStrict(new Date(photo.createdAt), {
+                addSuffix: true,
+              })}
+            </p>
+          </div>
 
-        <div className="flex-1 space-y-2">
-          <p className="text-gray-700">{photo.caption || "No caption"}</p>
-          <p className="text-sm text-gray-500">
-            {formatDistanceToNowStrict(new Date(photo.createdAt), {
-              addSuffix: true,
-            })}
-          </p>
-          <p className="text-sm text-gray-700">
-            Votes: <span className="font-semibold">{photo.votes ?? 0}</span>
-          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="rounded-2xl border border-white/10 bg-black/10 px-4 py-2 text-sm">
+              Votes{" "}
+              <span className="font-semibold text-white">
+                {photo.votes ?? 0}
+              </span>
+            </div>
+            <Button
+              asChild
+              variant="secondary"
+              className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
+            >
+              <Link href={`/challenges/${photo.challengeId}`}>
+                View my submission
+              </Link>
+            </Button>
+          </div>
 
-          <div className="pt-3">
+          <div className="pt-2">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-fit text-gray-50 bg-gray-800 hover:bg-black hover:text-white cursor-pointer"
+                  className="rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
+                  disabled={isDeleting}
                 >
-                  Delete
+                  {isDeleting ? "Deleting..." : "Delete"}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

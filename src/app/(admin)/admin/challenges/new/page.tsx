@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { format } from "date-fns";
-import { toast } from "sonner"; // optional: nice feedback toasts
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Plus } from "lucide-react";
 
 export default function NewChallengePage() {
   const router = useRouter();
@@ -49,19 +50,39 @@ export default function NewChallengePage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <Card className="p-6">
-        <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-gray-800">
-            New Challenge
-          </CardTitle>
-        </CardHeader>
+    <div className="space-y-8">
+      <section className="rounded-4xl border border-nav-border/50 bg-panel/85 p-8 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
+        <Badge
+          variant="secondary"
+          className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
+        >
+          Admin tools
+        </Badge>
+        <div className="mt-4 space-y-3">
+          <h1 className="text-3xl font-semibold text-white sm:text-4xl">
+            Launch a new challenge
+          </h1>
+          <p className="text-sm text-white/70 sm:text-base">
+            Set the theme, description, and schedule so the community knows what
+            to shoot next.
+          </p>
+        </div>
+      </section>
 
+      <Card className="rounded-4xl border border-white/10 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.65)]">
+        <CardHeader className="space-y-2">
+          <CardTitle className="flex items-center gap-2 text-2xl font-semibold text-white">
+            <Plus className="h-5 w-5 text-brand-accent" />
+            New challenge
+          </CardTitle>
+          <p className="text-sm text-white/70">
+            Titles, descriptions, and dates can be adjusted later if needed.
+          </p>
+        </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Title */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-gray-700">
+              <Label htmlFor="title" className="text-white/80">
                 Title
               </Label>
               <Input
@@ -70,13 +91,12 @@ export default function NewChallengePage() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Enter challenge title"
-                className="bg-gray-50 border-gray-300"
+                className="h-12 border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
             </div>
 
-            {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-gray-700">
+              <Label htmlFor="description" className="text-white/80">
                 Description
               </Label>
               <Textarea
@@ -85,15 +105,14 @@ export default function NewChallengePage() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Briefly describe the challenge"
-                className="bg-gray-50 border-gray-300"
+                className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
             </div>
 
-            {/* Dates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="startDate" className="text-gray-700">
-                  Start Date
+                <Label htmlFor="startDate" className="text-white/80">
+                  Start date
                 </Label>
                 <Input
                   id="startDate"
@@ -101,13 +120,13 @@ export default function NewChallengePage() {
                   type="datetime-local"
                   value={formData.startDate}
                   onChange={handleChange}
-                  className="bg-gray-50 border-gray-300"
+                  className="h-12 border-nav-border/50 bg-transparent text-white focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="endDate" className="text-gray-700">
-                  End Date
+                <Label htmlFor="endDate" className="text-white/80">
+                  End date
                 </Label>
                 <Input
                   id="endDate"
@@ -115,27 +134,27 @@ export default function NewChallengePage() {
                   type="datetime-local"
                   value={formData.endDate}
                   onChange={handleChange}
-                  className="bg-gray-50 border-gray-300"
+                  className="h-12 border-nav-border/50 bg-transparent text-white focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
                 />
               </div>
             </div>
 
-            {/* Buttons */}
-            <div className="flex items-center justify-end gap-4 pt-4">
+            <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-end">
               <Button
                 type="button"
-                variant="outline"
+                variant="secondary"
                 onClick={() => router.push("/admin/challenges")}
                 disabled={isPending}
+                className="h-12 rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-gray-900 text-white hover:bg-black"
                 disabled={isPending}
+                className="h-12 rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary hover:opacity-90"
               >
-                {isPending ? "Creating..." : "Create Challenge"}
+                {isPending ? "Creating..." : "Create challenge"}
               </Button>
             </div>
           </form>

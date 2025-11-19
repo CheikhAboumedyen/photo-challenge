@@ -1,29 +1,17 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -37,10 +25,7 @@ export function LoginForm() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   const mutation = useMutation({
@@ -50,14 +35,16 @@ export function LoginForm() {
         password: values.password,
         rememberMe: true,
       });
-
       if (error) throw new Error(error.message);
       return data;
     },
     onSuccess: (result) => {
       if (result.user) {
-        toast.success("Login successful!");
-        router.push("/home");
+        const role = (result.user as typeof result.user & { role?: string })
+          ?.role;
+        const destination = role === "admin" ? "/admin" : "/home";
+        toast.success("Welcome back!");
+        router.push(destination);
       }
     },
     onError: (error: any) => {
@@ -65,9 +52,7 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = (values: LoginFormValues) => {
-    mutation.mutate(values);
-  };
+  const onSubmit = (values: LoginFormValues) => mutation.mutate(values);
 
   const handleLoginWithGoogle = async () => {
     await authClient.signIn.social({
@@ -77,98 +62,94 @@ export function LoginForm() {
   };
 
   return (
-    <div className={cn("flex flex-col gap-6 items-center")}>
-      <Card className="w-full max-w-md border-none shadow-pv bg-white/70 backdrop-blur-lg rounded-pv">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-semibold text-pv-primary">
-            Welcome Back
-          </CardTitle>
-          <CardDescription className="text-gray-500">
-            Login to your{" "}
-            <span className="text-pv-secondary font-medium">PixiVerse</span>{" "}
-            account
-          </CardDescription>
-        </CardHeader>
+    <Card className="overflow-hidden border border-nav-border/50 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
+      <CardHeader className="space-y-3 text-center">
+        <CardTitle className="text-3xl font-semibold">
+          Login to Pixiverse
+        </CardTitle>
+        <p className="text-sm text-muted">
+          Enter your credentials to access uploads, voting, and feedback.
+        </p>
+      </CardHeader>
 
-        <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email" className="text-gray-700">
-                  Email
-                </FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  {...form.register("email")}
-                  className="border-gray-300 focus:border-pv-primary focus:ring-pv-primary/30"
-                />
-                {form.formState.errors.email && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </Field>
+      <CardContent className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-white/90"
+            >
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@email.com"
+              {...form.register("email")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.email && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.email.message}
+              </p>
+            )}
+          </div>
 
-              <Field>
-                <div className="flex items-center justify-between">
-                  <FieldLabel htmlFor="password" className="text-gray-700">
-                    Password
-                  </FieldLabel>
-                  <a
-                    href="/forgot-password"
-                    className="text-sm text-pv-primary hover:underline"
-                  >
-                    Forgot?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  {...form.register("password")}
-                  className="border-gray-300 focus:border-pv-primary focus:ring-pv-primary/30"
-                />
-                {form.formState.errors.password && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </Field>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <label htmlFor="password" className="font-medium text-white/90">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-white/70 transition hover:text-white"
+              >
+                Forgot?
+              </Link>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              {...form.register("password")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.password && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.password.message}
+              </p>
+            )}
+          </div>
 
-              <Field>
-                <Button
-                  type="submit"
-                  disabled={mutation.isPending}
-                  className="w-full bg-pv-primary hover:bg-pv-secondary text-pv-primary transition shadow-pv"
-                >
-                  {mutation.isPending ? "Logging in..." : "Login"}
-                </Button>
+          <Button
+            type="submit"
+            disabled={mutation.isPending}
+            className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
+          >
+            {mutation.isPending ? "Logging in..." : "Login"}
+          </Button>
+        </form>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleLoginWithGoogle}
-                  className="w-full mt-3 flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
-                >
-                  <FcGoogle className="w-5 h-5" />
-                  Login with Google
-                </Button>
-
-                <FieldDescription className="text-center mt-5 text-gray-600">
-                  Don’t have an account?{" "}
-                  <a
-                    href="/signup"
-                    className="text-pv-primary font-medium hover:underline"
-                  >
-                    Sign up
-                  </a>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+        <div className="space-y-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleLoginWithGoogle}
+            className="h-12 w-full rounded-full border-nav-border/60 bg-transparent text-white/90 hover:bg-white/5"
+          >
+            <FcGoogle className="mr-2 h-5 w-5" />
+            Continue with Google
+          </Button>
+          <p className="text-center text-sm text-white/70">
+            New to PixiVerse?{" "}
+            <Link
+              href="/signup"
+              className="font-semibold text-white hover:text-brand-accent"
+            >
+              Create an account
+            </Link>
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

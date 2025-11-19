@@ -1,15 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { updateProfile } from "@/app/(user)/profile/actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name is too short").max(50),
@@ -56,19 +56,21 @@ export default function ProfileForm({ user }: { user: any }) {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="bg-white shadow-xl rounded-2xl w-full max-w-md p-8 flex flex-col gap-6 border border-gray-100"
+      className="mx-auto w-full max-w-xl space-y-8 rounded-4xl border border-nav-border/50 bg-panel/90 p-8 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]"
     >
       <div className="text-center">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">
-          My Profile
-        </h1>
-        <p className="text-sm text-gray-500">
-          Update your personal information
+        <p className="text-sm uppercase tracking-[0.4em] text-white/60">
+          Profile
+        </p>
+        <h1 className="mt-3 text-3xl font-semibold">Your creator identity</h1>
+        <p className="text-sm text-white/70">
+          Update your name, avatar, and review the details tied to your
+          submissions.
         </p>
       </div>
 
-      <div className="flex flex-col items-center gap-3">
-        <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-gray-200 shadow-sm">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative h-28 w-28 overflow-hidden rounded-full border-2 border-nav-border/70">
           <Image
             src={preview || "/default-avatar.png"}
             alt="Profile"
@@ -76,9 +78,8 @@ export default function ProfileForm({ user }: { user: any }) {
             className="object-cover"
           />
         </div>
-
-        <label className="text-sm text-gray-600 cursor-pointer hover:text-gray-900">
-          <span className="underline">Change photo</span>
+        <label className="text-sm font-medium text-white/80 transition hover:text-white">
+          Change photo
           <input
             type="file"
             accept="image/*"
@@ -88,34 +89,45 @@ export default function ProfileForm({ user }: { user: any }) {
         </label>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">Full Name</label>
-        <Input
-          {...form.register("name")}
-          placeholder="Your name"
-          className="w-full"
-        />
-        {form.formState.errors.name && (
-          <p className="text-sm text-red-500">
-            {form.formState.errors.name.message}
-          </p>
-        )}
-      </div>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-white/90">Full name</label>
+          <Input
+            {...form.register("name")}
+            placeholder="Your name"
+            className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+          />
+          {form.formState.errors.name && (
+            <p className="text-sm text-red-400">
+              {form.formState.errors.name.message}
+            </p>
+          )}
+        </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">Email</label>
-        <Input value={user.email} readOnly className="bg-gray-100" />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-gray-700">Role</label>
-        <Input value={user.role} readOnly className="bg-gray-100" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="space-y-2 text-sm font-medium text-white/70">
+            Email
+            <Input
+              value={user.email}
+              readOnly
+              className="h-12 border-nav-border/30 bg-white/5 text-white/80"
+            />
+          </label>
+          <label className="space-y-2 text-sm font-medium text-white/70">
+            Role
+            <Input
+              value={user.role}
+              readOnly
+              className="h-12 border-nav-border/30 bg-white/5 text-white/80"
+            />
+          </label>
+        </div>
       </div>
 
       <Button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="bg-gray-900 hover:bg-black text-white w-full mt-4"
+        className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
       >
         {form.formState.isSubmitting ? "Saving..." : "Save changes"}
       </Button>

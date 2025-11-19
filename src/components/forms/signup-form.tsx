@@ -1,6 +1,13 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,21 +16,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
 
 // 1️- Validation schema
 const signupSchema = z
@@ -82,82 +76,97 @@ export function SignupForm() {
   };
 
   return (
-    <div className={cn("flex flex-col gap-6")}>
-      <Card className="w-[380px] shadow-md">
-        <CardHeader>
-          <CardTitle className="text-center">Create a new account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your details below to get started
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="text"
-                  type="text"
-                  placeholder="m@example.com"
-                  {...form.register("email")}
-                />
-                {form.formState.errors.email && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
-              </Field>
+    <Card className="overflow-hidden border border-nav-border/50 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
+      <CardHeader className="space-y-3 text-center">
+        <CardTitle className="text-3xl font-semibold">Join PixiVerse</CardTitle>
+        <CardDescription className="text-sm text-muted">
+          Create your account to submit photos, vote fairly, and climb the
+          leaderboard.
+        </CardDescription>
+      </CardHeader>
 
-              <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
-                  id="password"
-                  type="password"
-                  {...form.register("password")}
-                />
-                {form.formState.errors.password && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.password.message}
-                  </p>
-                )}
-              </Field>
+      <CardContent className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-white/90"
+            >
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@email.com"
+              {...form.register("email")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.email && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.email.message}
+              </p>
+            )}
+          </div>
 
-              <Field>
-                <FieldLabel htmlFor="confirm">Confirm Password</FieldLabel>
-                <Input
-                  id="confirm"
-                  type="password"
-                  {...form.register("confirm")}
-                />
-                {form.formState.errors.confirm && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.confirm.message}
-                  </p>
-                )}
-              </Field>
+          <div className="space-y-2">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-white/90"
+            >
+              Password
+            </label>
+            <Input
+              id="password"
+              type="password"
+              {...form.register("password")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.password && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.password.message}
+              </p>
+            )}
+          </div>
 
-              <Field>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={mutation.isPending}
-                >
-                  {mutation.isPending ? "Signing up..." : "Sign up"}
-                </Button>
-                <FieldDescription className="text-center mt-3">
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    className="underline hover:text-primary transition cursor-pointer"
-                  >
-                    <a href="/login">Login</a>
-                  </button>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          <div className="space-y-2">
+            <label
+              htmlFor="confirm"
+              className="text-sm font-medium text-white/90"
+            >
+              Confirm password
+            </label>
+            <Input
+              id="confirm"
+              type="password"
+              {...form.register("confirm")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.confirm && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.confirm.message}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Signing up..." : "Create account"}
+          </Button>
+        </form>
+
+        <p className="text-center text-sm text-white/70">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="font-semibold text-white hover:text-brand-accent"
+          >
+            Log in
+          </Link>
+        </p>
+      </CardContent>
+    </Card>
   );
 }
