@@ -5,6 +5,7 @@ import "./globals.css";
 import { ReactQueryProvider } from "@/lib/react-query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AppNavbarClient } from "@/components/navigation/app-navbar";
+import { AppFooter } from "@/components/navigation/app-footer";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -31,6 +32,7 @@ export default async function RootLayout({
         <ReactQueryProvider>
           <AppNavbarClient />
           {children}
+          <AppFooter />
         </ReactQueryProvider>
         <Toaster position="top-right" />
       </body>
