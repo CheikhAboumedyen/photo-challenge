@@ -81,26 +81,28 @@ export default function UploadPage() {
 
           <div className="mt-4 space-y-3">
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-              Share your portrait story
+              Share your challenge photo
             </h1>
             <p className="text-sm text-white/70 sm:text-base">
-              One photo per creator per brief. Include a caption with lighting
-              notes so voters get the full context.
+              One photo per creator per challenge. Add a short caption so voters
+              understand your idea.
             </p>
           </div>
 
           <div className="mt-8 space-y-4">
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <UploadIcon className="h-4 w-4 text-brand-accent" />
-              JPEG/PNG • up to 10MB • color or monochrome welcome
+              JPEG/PNG • clear resolution recommended
             </div>
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <Camera className="h-4 w-4 text-brand-accent" />
-              Attach gear, lighting cues, or story elements in the caption
+              Use the caption to share gear, lighting, or story details if you
+              want.
             </div>
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <Clock className="h-4 w-4 text-brand-accent" />
-              Submit before voting opens—late uploads roll to the next brief
+              Make sure you upload before the challenge ends so your photo can
+              be included in voting.
             </div>
           </div>
         </section>
@@ -149,10 +151,14 @@ export default function UploadPage() {
                   </label>
                   <Textarea
                     value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
+                    onChange={(e) => setCaption(e.target.value.slice(0, 20))}
+                    maxLength={20}
                     placeholder="Lighting setup, lens, story inspiration…"
                     className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
                   />
+                  <p className="text-xs text-white/60">
+                    {caption.length} / 20 characters
+                  </p>
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">

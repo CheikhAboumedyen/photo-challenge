@@ -1,3 +1,4 @@
+// src\components\forms\profile-form.tsx
 "use client";
 
 import Image from "next/image";
@@ -12,7 +13,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const profileSchema = z.object({
-  name: z.string().min(2, "Name is too short").max(50),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(20, "Name must be at most 50 characters")
+    .regex(
+      /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/,
+      "Name can only contain letters, spaces, apostrophes, and hyphens"
+    ),
   image: z.any().optional(),
 });
 

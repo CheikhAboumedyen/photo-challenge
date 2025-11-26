@@ -1,3 +1,4 @@
+// src\app\(admin)\admin\challenges\[id]\edit\page.tsx
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
@@ -53,7 +54,8 @@ export default function EditChallengePage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const limitedValue = name === "description" ? value.slice(0, 50) : value;
+    setFormData((prev) => ({ ...prev, [name]: limitedValue }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +92,8 @@ export default function EditChallengePage() {
             Edit challenge
           </h1>
           <p className="text-sm text-white/70 sm:text-base">
-            Keep the details aligned with the storytelling and voting cadence.
+            Make sure the title, description, and dates are clear before entries
+            open.
           </p>
         </div>
       </section>
@@ -132,8 +135,12 @@ export default function EditChallengePage() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Briefly describe the challenge"
+                maxLength={50}
                 className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
+              <p className="text-xs text-white/60">
+                {formData.description.length} / 50
+              </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">

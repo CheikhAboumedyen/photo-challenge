@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PhotoChallenge",
+  title: "PixiVerse",
   description:
     "Weekly portrait challenges built on Next.js, Drizzle, and BetterAuth.",
 };

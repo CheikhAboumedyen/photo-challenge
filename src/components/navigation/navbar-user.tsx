@@ -6,30 +6,31 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
-const adminLinks = [
-  { name: "Dashboard", href: "/admin" },
-  { name: "Challenges", href: "/admin/challenges" },
-  { name: "Photos", href: "/admin/photos" },
+type NavbarUserProps = {
+  initialUser?: {
+    role?: string | null;
+  } | null;
+};
+
+const userLinks = [
+  { name: "Home", href: "/home" },
+  { name: "Submissions", href: " /submissions" },
   { name: "Leaderboard", href: "/leaderboard" },
   { name: "Profile", href: "/profile" },
 ];
 
-const isActivePath = (pathname: string, href: string) => {
-  if (href === "/admin") {
-    return pathname === "/admin";
-  }
-  return pathname === href || pathname.startsWith(`${href}/`);
-};
+const isActivePath = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
-export function NavbarAdmin() {
+export function NavbarUser({ initialUser }: NavbarUserProps) {
   const { data, isPending } = authClient.useSession();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const sessionUser = data?.user;
+  const sessionUser = data?.user ?? initialUser ?? null;
 
   if (!sessionUser && isPending) {
     return (
@@ -41,7 +42,7 @@ export function NavbarAdmin() {
     );
   }
 
-  if (!sessionUser || sessionUser.role !== "admin") {
+  if (!sessionUser || sessionUser.role === "admin") {
     return null;
   }
 
@@ -51,22 +52,22 @@ export function NavbarAdmin() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-nav-border/50 bg-nav-surface/90 text-brand-foreground backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-nav-border/50 bg-nav-surface/80 text-brand-foreground backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link
-          href="/admin"
+          href="/home"
           className="flex items-center gap-3 font-semibold tracking-tight text-brand-foreground"
         >
-          <div className="rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-[0.3em] text-white/70">
-            Admin
+          <div className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.4em] text-white/70">
+            PX
           </div>
           <span className="bg-brand-accent bg-clip-text text-transparent">
-            PixiVerse Studio
+            PixiVerse
           </span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
-          {adminLinks.map((link) => (
+          {userLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -96,12 +97,6 @@ export function NavbarAdmin() {
           >
             Sign out
           </Button>
-          <Button
-            className="rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
-            onClick={() => router.push("/home")}
-          >
-            View site
-          </Button>
         </div>
 
         <button
@@ -124,7 +119,7 @@ export function NavbarAdmin() {
             className="md:hidden border-t border-nav-border/40 bg-nav-surface/95 px-4 pb-6 pt-4 text-white/90 backdrop-blur-xl"
           >
             <div className="grid gap-4">
-              {adminLinks.map((link) => (
+              {userLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => {
@@ -142,27 +137,16 @@ export function NavbarAdmin() {
               ))}
             </div>
 
-            <div className="mt-6 grid gap-3">
-              <Button
-                className="w-full rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
-                onClick={() => {
-                  router.push("/home");
-                  setOpen(false);
-                }}
-              >
-                View site
-              </Button>
-              <Button
-                variant="secondary"
-                className="w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
-                onClick={() => {
-                  setOpen(false);
-                  handleSignOut();
-                }}
-              >
-                Sign out
-              </Button>
-            </div>
+            <Button
+              variant="secondary"
+              className="mt-6 w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
+              onClick={() => {
+                setOpen(false);
+                handleSignOut();
+              }}
+            >
+              Sign out
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,6 +1,7 @@
+// src\app\(user)\profile\actions.ts
 "use server";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { db, schema } from "@/db";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -24,8 +25,24 @@ export async function updateProfile(formData: FormData): Promise<void> {
   if (!session?.user) throw new Error("Unauthorized");
 
   const userId = session.user.id;
-  const name = formData.get("name")?.toString()?.trim() ?? "";
+
+  const rawName = formData.get("name")?.toString() ?? "";
+  const name = rawName.trim();
   const file = formData.get("image") as File | null;
+
+  // Server-side validation for name (same rules as the form)
+  if (name) {
+    if (name.length < 2 || name.length > 50) {
+      throw new Error("Name must be between 2 and 50 characters");
+    }
+
+    const namePattern = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+    if (!namePattern.test(name)) {
+      throw new Error(
+        "Name can only contain letters, spaces, apostrophes, and hyphens"
+      );
+    }
+  }
 
   let imageUrl: string | undefined;
 

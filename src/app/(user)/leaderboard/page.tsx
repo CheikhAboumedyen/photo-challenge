@@ -25,7 +25,7 @@ function PodiumCard({
     "from-slate-600 to-slate-800",
   ];
   return (
-    <div className="relative flex flex-col items-center gap-4 rounded-[28px] border border-white/10 bg-panel/80 p-6 text-center text-white">
+    <div className="relative flex flex-col items-center gap-3 rounded-[28px] border border-white/10 bg-panel/80 p-5 text-center text-white">
       {rank === 1 && (
         <Crown className="absolute -top-4 h-7 w-7 text-brand-accent drop-shadow-lg" />
       )}
@@ -102,7 +102,7 @@ function PhotoCard({
       <div className="space-y-2 p-4 text-sm text-white/80">
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-white/20 bg-transparent">
-            <AvatarFallback className="text-sm	text-white/80">
+            <AvatarFallback className="text-sm text-white/80">
               {userName[0]?.toUpperCase() ?? "C"}
             </AvatarFallback>
           </Avatar>
@@ -145,11 +145,11 @@ export default async function LeaderboardPage() {
                 {activeChallenge.title}
               </h1>
               <p className="text-sm text-white/70">
-                Tracking every vote for this week’s portrait brief.
+                Tracking every vote for the current challenge.
               </p>
             </div>
             <p className="text-sm text-white/70">
-              {format(new Date(activeChallenge.startDate), "MMM dd")} –{" "}
+              {format(new Date(activeChallenge.startDate), "MMM dd")} -{" "}
               {format(new Date(activeChallenge.endDate), "MMM dd, yyyy")}
             </p>
           </div>
@@ -157,9 +157,9 @@ export default async function LeaderboardPage() {
           {leaderboard.length === 0 ? (
             <p className="mt-6 text-white/70">No votes yet.</p>
           ) : (
-            <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]">
-              <div className="space-y-6">
-                <div className="grid gap-6 md:grid-cols-3">
+            <div className="mt-10 flex flex-col gap-8 lg:h-120 lg:flex-row lg:items-stretch lg:min-h-0">
+              <div className="flex h-full min-h-0 flex-col gap-5 lg:flex-1">
+                <div className="grid gap-4 md:grid-cols-3">
                   {leaderboard.slice(0, 3).map((u, i) => (
                     <PodiumCard
                       key={u.userId}
@@ -169,22 +169,24 @@ export default async function LeaderboardPage() {
                     />
                   ))}
                 </div>
-
+                {/* h-full min-h-0 space-y-3 overflow-y-auto pr-1 scrollbar-soft */}
                 {rest.length > 0 && (
-                  <div className="rounded-[28px] border border-white/10 bg-black/15 p-5 space-y-3">
-                    {rest.map((u, idx) => (
-                      <LeaderboardRow
-                        key={u.userId}
-                        userName={u.userName || "Anonymous"}
-                        voteCount={u.voteCount}
-                        rank={idx + 4}
-                      />
-                    ))}
+                  <div className="flex-1 rounded-[28px] border border-white/10 bg-black/15 p-4 lg:min-h-0">
+                    <div className="h-full min-h-0 max-h-80 space-y-3 overflow-y-auto pr-2 scrollbar-soft lg:max-h-full">
+                      {rest.map((u, idx) => (
+                        <LeaderboardRow
+                          key={u.userId}
+                          userName={u.userName || "Anonymous"}
+                          voteCount={u.voteCount}
+                          rank={idx + 4}
+                        />
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
 
-              <div className="rounded-[28px] border border-white/10 bg-black/15 p-6 text-white shadow-[0_20px_45px_rgba(2,6,23,0.55)]">
+              <div className="flex h-full min-h-0 flex-col rounded-[28px] border border-white/10 bg-black/15 p-6 text-white shadow-[0_20px_45px_rgba(2,6,23,0.55)] lg:w-full lg:max-w-sm">
                 <p className="text-sm uppercase tracking-[0.4em] text-white/60">
                   Winner spotlight
                 </p>
@@ -194,15 +196,15 @@ export default async function LeaderboardPage() {
                       {winner.userName || "Anonymous"}
                     </p>
                     <p className="text-sm text-white/70">
-                      {winner.photoCaption || "Untitled portrait"}
+                      {winner.photoCaption || "Untitled photo"}
                     </p>
-                    <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
+                    <div className="mt-5 flex-1 overflow-hidden rounded-2xl border border-white/10">
                       <Image
                         src={winner.photoUrl}
                         alt={winner.photoCaption || "Winning photo"}
                         width={640}
                         height={400}
-                        className="h-72 w-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                     </div>
                     <p className="mt-3 text-xs text-white/60">
@@ -210,11 +212,11 @@ export default async function LeaderboardPage() {
                     </p>
                   </>
                 ) : (
-                  <div className="mt-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-white/20 p-6 text-center text-white/70">
+                  <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/20 p-6 text-center text-white/70">
                     <Sparkles className="h-6 w-6 text-brand-accent" />
                     <p>No photo found for the current leader yet.</p>
                     <p className="text-xs text-white/50">
-                      The top portrait will be featured here once it’s uploaded.
+                      The top photo will be featured here once it's uploaded.
                     </p>
                   </div>
                 )}
@@ -237,7 +239,8 @@ export default async function LeaderboardPage() {
               Past challenges
             </h2>
             <p className="text-sm text-white/70">
-              Study the strongest uploads to prep for the next drop.
+              Study strong uploads from past challenges to prepare for the next
+              one.
             </p>
           </div>
         </div>
@@ -254,7 +257,7 @@ export default async function LeaderboardPage() {
                       {ch.title}
                     </p>
                     <p className="text-sm text-white/60">
-                      {format(new Date(ch.startDate), "MMM dd, yyyy")} –{" "}
+                      {format(new Date(ch.startDate), "MMM dd, yyyy")} -{" "}
                       {format(new Date(ch.endDate), "MMM dd, yyyy")}
                     </p>
                   </div>

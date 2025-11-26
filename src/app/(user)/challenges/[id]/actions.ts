@@ -1,5 +1,5 @@
 "use server";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { db, schema } from "@/db";
 import { eq, sql, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";

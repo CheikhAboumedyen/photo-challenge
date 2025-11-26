@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { db, schema } from "@/db";
 import { eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";

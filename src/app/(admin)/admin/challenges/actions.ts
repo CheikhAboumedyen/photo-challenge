@@ -1,3 +1,4 @@
+// src\app\(admin)\admin\challenges\actions.ts
 "use server";
 
 import { db, schema } from "@/db";
@@ -44,15 +45,17 @@ export async function createChallenge(data: {
   endDate: string;
 }) {
   try {
+    const description = (data.description ?? "").slice(0, 50);
+
     await db.insert(schema.challenge).values({
       title: data.title,
-      description: data.description ?? "",
+      description,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
     });
 
     // Revalidate the admin list page so it updates instantly
-    revalidatePath("/admin/challenge");
+    revalidatePath("/admin/challenges");
     return { success: true };
   } catch (error) {
     console.error("Error creating challenge:", error);
@@ -72,11 +75,13 @@ export async function updateChallenge(
   }
 ) {
   try {
+    const description = data.description?.slice(0, 50);
+
     await db
       .update(schema.challenge)
       .set({
         ...(data.title && { title: data.title }),
-        ...(data.description && { description: data.description }),
+        ...(description !== undefined && { description }),
         ...(data.startDate && { startDate: new Date(data.startDate) }),
         ...(data.endDate && { endDate: new Date(data.endDate) }),
       })

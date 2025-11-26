@@ -1,9 +1,9 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { NavbarAdmin } from "@/components/navbar-admin";
-import { NavbarPublic } from "@/components/navbar-public";
-import { NavbarUser } from "@/components/navbar-user";
+import { authClient } from "@/lib/auth/auth-client";
+import { NavbarAdmin } from "@/components/navigation/navbar-admin";
+import { NavbarPublic } from "@/components/navigation/navbar-public";
+import { NavbarUser } from "@/components/navigation/navbar-user";
 
 export function AppNavbarClient() {
   const { data, isPending } = authClient.useSession();

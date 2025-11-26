@@ -20,7 +20,8 @@ export default async function ProfilePage() {
     },
     {
       title: "Community first",
-      description: "Share lighting notes and feedback to level up together.",
+      description:
+        "Keep your details up to date so people recognize your work.",
       icon: Sparkles,
     },
   ];
@@ -39,8 +40,8 @@ export default async function ProfilePage() {
             Personal settings
           </h1>
           <p className="text-sm text-white/70 sm:text-base">
-            Keep your avatar, name, and account details polished so fellow
-            photographers know who they’re learning from.
+            Keep your avatar, name, and account details up to date so people
+            know who’s behind each photo.
           </p>
         </div>
 

@@ -1,3 +1,4 @@
+// src\app\(admin)\admin\challenges\page.tsx
 import Link from "next/link";
 import { getChallenges, deleteChallenge } from "./actions";
 import { Button } from "@/components/ui/button";
@@ -44,8 +45,8 @@ export default async function AdminChallengesPage() {
                 Challenges
               </h1>
               <p className="text-sm text-white/70 sm:text-base">
-                Launch new portrait briefs, review timelines, and maintain a
-                healthy cadence for the community.
+                Create and manage challenges, review dates, and keep a steady
+                rhythm for the community.
               </p>
             </div>
           </div>
@@ -64,7 +65,7 @@ export default async function AdminChallengesPage() {
             <Sparkles className="mx-auto mb-4 h-6 w-6 text-brand-accent" />
             <p>
               No challenges yet. Click “New Challenge” to schedule your first
-              brief.
+              challenge.
             </p>
           </div>
         ) : (
@@ -84,9 +85,9 @@ export default async function AdminChallengesPage() {
               return (
                 <Card
                   key={ch.id}
-                  className="flex flex-col gap-6 border border-white/10 bg-panel/80 p-6 text-brand-foreground shadow-[0_20px_45px_rgba(2,6,23,0.55)] lg:flex-row lg:items-center lg:justify-between"
+                  className="flex flex-col gap-6 border border-white/10 bg-panel/80 p-6 text-brand-foreground shadow-[0_20px_45px_rgba(2,6,23,0.55)] lg:flex-row lg:items-start lg:justify-between"
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-3 lg:max-w-3xl lg:flex-1">
                     <CardHeader className="p-0">
                       <h2 className="text-2xl font-semibold text-white">
                         {ch.title}
@@ -116,7 +117,7 @@ export default async function AdminChallengesPage() {
                     </div>
                   </div>
 
-                  <CardContent className="flex flex-col gap-3 p-0 text-sm text-white lg:flex-row lg:items-center lg:gap-6">
+                  <CardContent className="flex w-full flex-row items-center justify-end gap-4 p-0 text-sm text-white lg:w-auto">
                     <Link
                       href={`/admin/challenges/${ch.id}/edit`}
                       className="text-center font-semibold text-white transition hover:text-brand-accent"
@@ -158,7 +159,7 @@ export default async function AdminChallengesPage() {
                                 variant="destructive"
                                 className="bg-red-500 text-white hover:bg-red-400"
                               >
-                                Confirm delete
+                                Delete challenge
                               </Button>
                             </AlertDialogAction>
                           </AlertDialogFooter>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client"; // adjust path if needed
+import { authClient } from "@/lib/auth/auth-client"; // adjust path if needed
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 

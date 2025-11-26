@@ -1,6 +1,6 @@
 // src/app/(user)/challenges/[id]/page.tsx
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { db, schema } from "@/db";
 import { eq, and } from "drizzle-orm";
 import { getPhotosWithVotes } from "./actions";
@@ -74,7 +74,7 @@ export default async function ChallengeVotePage({
           </div>
           <p className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-white/60">
             <Sparkles className="h-4 w-4 text-brand-accent" />
-            Vote for one photo • feedback matters
+            Vote for one photo • your vote helps decide the results
           </p>
         </section>
 
@@ -87,6 +87,7 @@ export default async function ChallengeVotePage({
             {photos.map((p) => {
               const isSelf = p.userId === userId;
               const isVoted = p.id === userVotedPhotoId;
+              const hasExistingVote = !!userVotedPhotoId;
 
               return (
                 <article
@@ -125,6 +126,7 @@ export default async function ChallengeVotePage({
                         photoId={p.id}
                         disabled={isSelf}
                         isVoted={isVoted}
+                        willSwitch={hasExistingVote && !isVoted}
                       />
                       <p className="text-xs text-white/60">
                         {p.voteCount} vote{p.voteCount === 1 ? "" : "s"}

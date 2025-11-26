@@ -1,7 +1,7 @@
 // src\app\(admin)\admin\photos\page.tsx
 import Image from "next/image";
 import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import {
   getAllPhotosGroupedByChallenge,
   toggleHide,
@@ -23,7 +23,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Camera, EyeOff, Eye } from "lucide-react";
+import { EyeOff, Eye } from "lucide-react";
 
 export default async function AdminPhotosPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -42,11 +42,11 @@ export default async function AdminPhotosPage() {
             Photo moderation
           </Badge>
           <p className="mt-4 text-2xl font-semibold text-white">
-            No submissions yet
+            No submissions to review yet
           </p>
           <p className="mt-2 text-sm text-white/70">
-            As soon as creators upload for an active challenge, they’ll appear
-            here for review.
+            Once participants upload photos for an active challenge, they’ll
+            appear here for review.
           </p>
         </div>
       </div>
@@ -69,11 +69,11 @@ export default async function AdminPhotosPage() {
           </Badge>
           <div className="mt-4 space-y-2">
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-              Review & moderate uploads
+              Review and moderate submissions
             </h1>
             <p className="text-sm text-white/70">
-              Hide unsuitable entries or delete photos that violate community
-              guidelines. Each section groups submissions by challenge.
+              Hide entries that shouldn’t appear publicly or delete photos that
+              break your guidelines. Photos are grouped by challenge.
             </p>
           </div>
         </section>
@@ -92,7 +92,7 @@ export default async function AdminPhotosPage() {
                   {g.challengeTitle}
                 </h2>
                 <p className="text-sm text-white/70">
-                  {g.photos.length} submission{g.photos.length > 1 ? "s" : ""}
+                  {g.photos.length} photo{g.photos.length > 1 ? "s" : ""}
                 </p>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default async function AdminPhotosPage() {
                   <div className="relative h-60 w-full">
                     <Image
                       src={p.imageUrl}
-                      alt={p.caption ?? "Photo"}
+                      alt={p.caption ?? "Challenge photo"}
                       fill
                       className={`object-cover ${
                         p.isHidden ? "opacity-40 grayscale" : ""
@@ -153,7 +153,7 @@ export default async function AdminPhotosPage() {
                             {p.isHidden ? (
                               <>
                                 <Eye className="mr-1 h-3.5 w-3.5" />
-                                Unhide
+                                Show
                               </>
                             ) : (
                               <>
@@ -179,8 +179,8 @@ export default async function AdminPhotosPage() {
                                 Delete this photo?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                This removes the image and all of its votes. It
-                                cannot be undone.
+                                This will remove the photo and all of its votes.
+                                This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

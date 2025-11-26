@@ -1,6 +1,6 @@
 // src/proxy.ts
 import { NextResponse, NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 
 const PUBLIC_PATHS = ["/", "/login", "/signup"];
 

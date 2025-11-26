@@ -1,56 +1,39 @@
+// src\app\(user)\home\page.tsx
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
-import { db, schema } from "@/db";
-import { and, lte, gte } from "drizzle-orm";
+import { auth } from "@/lib/auth/auth";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarRange, Sparkles, Upload, Users, Trophy } from "lucide-react";
 import MySubmission from "@/components/my-submission/my-submission";
-
-async function getActiveChallenge() {
-  const now = new Date();
-  const rows = await db
-    .select()
-    .from(schema.challenge)
-    .where(
-      and(
-        lte(schema.challenge.startDate, now),
-        gte(schema.challenge.endDate, now)
-      )
-    )
-    .limit(1);
-
-  return rows[0] ?? null;
-}
+import {
+  getActiveChallenge,
+  getLeaderboardPreviewForChallenge,
+} from "@/app/(user)/leaderboard/actions";
+import { getSiteStats } from "@/lib/stats";
 
 const weeklyRhythm = [
   {
     label: "Upload",
-    range: "Mon – Thu",
-    description: "Drop one portrait with lighting + gear notes.",
+    range: "While entries are open",
+    description:
+      "Submit one photo for the current challenge with a short caption.",
     icon: Upload,
   },
   {
     label: "Vote",
-    range: "Fri – Sat",
-    description: "Blind vote on peers and leave tactful critique.",
+    range: "While voting is open",
+    description: "Vote on other entries without seeing who posted them.",
     icon: Users,
   },
   {
     label: "Celebrate",
-    range: "Sunday",
-    description: "Winners, live breakdowns, and next brief reveal.",
+    range: "When results are published",
+    description: "See which photos ranked highest and learn from what worked.",
     icon: Trophy,
   },
-];
-
-const communityStats = [
-  { label: "Photos reviewed", value: "1.3M" },
-  { label: "Creators online", value: "8.4K" },
-  { label: "Votes cast weekly", value: "56K" },
 ];
 
 export default async function HomeDashboard() {
@@ -63,6 +46,25 @@ export default async function HomeDashboard() {
   }
 
   const active = await getActiveChallenge();
+  const siteStats = await getSiteStats();
+  const leaderboardPreview = active
+    ? await getLeaderboardPreviewForChallenge(active.id)
+    : [];
+  const numberFormatter = new Intl.NumberFormat("en-US");
+  const communityStats = [
+    {
+      label: "Photos submitted",
+      value: numberFormatter.format(siteStats.totalPhotos),
+    },
+    {
+      label: "Active members",
+      value: numberFormatter.format(siteStats.totalMembers),
+    },
+    {
+      label: "Votes cast",
+      value: numberFormatter.format(siteStats.totalVotes),
+    },
+  ];
   const countdown = active
     ? formatDistanceToNowStrict(new Date(active.endDate), { addSuffix: true })
     : null;
@@ -100,7 +102,7 @@ export default async function HomeDashboard() {
                   <p className="text-base text-muted">{active.description}</p>
                 ) : (
                   <p className="text-base text-muted">
-                    We’ll notify you as soon as the next portrait brief is live.
+                    You’ll see the next challenge here as soon as it goes live.
                   </p>
                 )}
               </div>
@@ -146,7 +148,8 @@ export default async function HomeDashboard() {
                   {active ? "Ready for takeoff" : "Keep the momentum"}
                 </h2>
                 <p className="text-sm text-white/70">
-                  Ship your portrait, collect notes, and keep your streak alive.
+                  Upload your photo, collect votes, and stay involved in the
+                  community.
                 </p>
               </div>
 
@@ -234,24 +237,29 @@ export default async function HomeDashboard() {
                 View all
               </Link>
             </div>
-            <ul className="mt-5 space-y-4">
-              {["Eden Shaw", "Marcus Patel", "Lina Ortega"].map(
-                (name, index) => (
+            {leaderboardPreview.length === 0 ? (
+              <p className="mt-5 text-sm text-white/70">
+                No results yet. Once this challenge has votes, the top creators
+                will appear here.
+              </p>
+            ) : (
+              <ul className="mt-5 space-y-4">
+                {leaderboardPreview.map((entry, index) => (
                   <li
-                    key={name}
+                    key={entry.photoId ?? `${entry.userId}-${index}`}
                     className="flex items-center justify-between rounded-2xl border border-white/5 bg-black/10 px-4 py-3 text-white"
                   >
                     <span className="flex items-center gap-2 text-sm">
                       <span className="text-white/60">{index + 1}.</span>
-                      {name}
+                      {entry.userName || "Anonymous"}
                     </span>
                     <span className="text-sm text-white/70">
-                      {120 - index * 14} pts
+                      {entry.voteCount} votes
                     </span>
                   </li>
-                )
-              )}
-            </ul>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="rounded-[28px] border border-nav-border/40 bg-panel/80 p-6">
@@ -278,8 +286,8 @@ export default async function HomeDashboard() {
               Need a refresher?
             </p>
             <p className="mt-4 text-white/85">
-              Use the archive to study past briefs, lighting setups, and jury
-              picks. Save references for upcoming shoots.
+              Use the archive to study past challenges, see how photos placed,
+              and save ideas for future submissions.
             </p>
             <Button
               asChild
@@ -292,8 +300,8 @@ export default async function HomeDashboard() {
         </section>
 
         <div className="rounded-[28px] border border-nav-border/30 bg-panel/70 p-6 text-sm text-white/70">
-          Tip: Only one submission per user each week. Keep feedback
-          constructive and focus on helping peers improve.
+          Tip: Only one submission per user per challenge. Vote fairly and focus
+          on supporting strong work.
         </div>
       </div>
     </div>

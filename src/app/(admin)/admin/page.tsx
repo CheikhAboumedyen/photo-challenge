@@ -1,9 +1,10 @@
+// src\app\(admin)\admin\page.tsx
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { db, schema } from "@/db";
 import { and, lte, gte } from "drizzle-orm";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -50,11 +51,11 @@ export default async function AdminDashboardPage() {
             </Badge>
             <div>
               <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-                Current brief overview
+                Current challenge overview
               </h1>
               <p className="text-sm text-white/70 sm:text-base">
-                Monitor the live challenge, edit timelines, or spin up a new
-                drop.
+                See what’s running now, adjust dates, or create the next
+                challenge.
               </p>
             </div>
           </div>
@@ -84,8 +85,8 @@ export default async function AdminDashboardPage() {
             Active challenge
           </CardTitle>
           <p className="text-sm text-white/70">
-            Only one challenge can run at a time. Keep dates tight so creators
-            stay engaged.
+            Only one challenge can be live at a time. Make sure the schedule
+            stays clear for everyone.
           </p>
         </CardHeader>
         <CardContent>
@@ -140,7 +141,7 @@ export default async function AdminDashboardPage() {
                 No active challenge
               </p>
               <p className="mt-2 text-sm text-white/60">
-                Schedule the next portrait brief to keep the momentum going.
+                Schedule the next challenge to keep the community engaged.
               </p>
               <Button
                 asChild

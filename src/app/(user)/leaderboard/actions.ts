@@ -46,10 +46,14 @@ export async function getLeaderboardForChallenge(challengeId: string) {
       schema.photo.imageUrl,
       schema.photo.caption
     )
-    .orderBy(sql`COUNT(${schema.vote.id}) DESC`)
-    .limit(3);
+    .orderBy(sql`COUNT(${schema.vote.id}) DESC`);
 
   return rows;
+}
+
+export async function getLeaderboardPreviewForChallenge(challengeId: string) {
+  const leaderboard = await getLeaderboardForChallenge(challengeId);
+  return leaderboard.slice(0, 3);
 }
 
 export async function getPastChallengesWithTopPhotos() {

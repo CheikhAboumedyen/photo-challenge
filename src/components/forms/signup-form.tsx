@@ -1,3 +1,4 @@
+// src\components\forms\signup-form.tsx
 "use client";
 
 import Link from "next/link";
@@ -17,11 +18,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 
 // 1️- Validation schema
 const signupSchema = z
   .object({
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name must be at most 50 characters")
+      .regex(
+        /^[\p{L}\p{M}' -]+$/u,
+        "Name can only contain letters, spaces, apostrophes, and hyphens"
+      ),
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirm: z.string().min(8, "Password confirmation is required"),
@@ -39,6 +48,7 @@ export function SignupForm() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirm: "",
@@ -50,7 +60,7 @@ export function SignupForm() {
       const { data, error } = await authClient.signUp.email({
         email: values.email,
         password: values.password,
-        name: values.email.split("@")[0],
+        name: values.name.trim(),
         callbackURL: "/home",
       });
 
@@ -60,14 +70,25 @@ export function SignupForm() {
       if (error) throw new Error(error.message);
       return data;
     },
-    onSuccess: (result) => {
+    onSuccess: async (result, values) => {
       if (result.user) {
-        toast.success("Signup successful!");
-        router.push("/home"); // signup successful
+        const { error: otpError } =
+          await authClient.emailOtp.sendVerificationOtp({
+            email: values.email,
+            type: "email-verification",
+          });
+
+        if (otpError) {
+          toast.error(otpError.message || "Failed to send verification code.");
+        } else {
+          toast.success("Signup successful! Please verify your email.");
+        }
+
+        router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
       }
     },
     onError: (err: any) => {
-      toast.error(err.message || "Login failed");
+      toast.error(err.message || "Signup failed");
     },
   });
 
@@ -87,6 +108,24 @@ export function SignupForm() {
 
       <CardContent className="space-y-5">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium text-white/90">
+              Name
+            </label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Your name"
+              {...form.register("name")}
+              className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
+            />
+            {form.formState.errors.name && (
+              <p className="text-sm text-red-400">
+                {form.formState.errors.name.message}
+              </p>
+            )}
+          </div>
+
           <div className="space-y-2">
             <label
               htmlFor="email"

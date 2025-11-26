@@ -4,7 +4,7 @@ import cloudinary from "@/lib/cloudinary";
 import { db, schema } from "@/db";
 import { and, eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +14,8 @@ export async function POST(req: Request) {
     // parse formData
     const form = await req.formData();
     const file = form.get("file") as File | null;
-    const caption = (form.get("caption") as string) || "";
+    const rawCaption = (form.get("caption") as string) || "";
+    const caption = rawCaption.slice(0, 20);
     const challengeId = (form.get("challengeId") as string) || "";
 
     // validate input

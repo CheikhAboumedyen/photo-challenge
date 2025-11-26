@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { db, schema } from "@/db";
 import { eq } from "drizzle-orm";
-import { auth } from "@/lib/auth";
+import { auth } from "@/lib/auth/auth";
 import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";

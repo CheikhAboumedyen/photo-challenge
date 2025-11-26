@@ -1,3 +1,4 @@
+// src\app\(user)\submissions\page.tsx
 import Image from "next/image";
 import { format } from "date-fns";
 import { getPastChallengeSubmissions } from "./actions";
@@ -20,8 +21,8 @@ export default async function SubmissionsPage() {
             Past submissions
           </h1>
           <p className="text-sm text-white/70 sm:text-base">
-            Browse previous challenges and study how members interpreted each
-            brief.
+            Browse previous challenges and see how members approached each
+            theme.
           </p>
         </div>
       </section>
