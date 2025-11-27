@@ -1,10 +1,12 @@
 // src/app/(auth)/login/page.tsx
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { auth } from "@/lib/auth/auth";
 import { LoginScreen } from "@/components/auth/login-screen";
 
 export default async function LoginPage() {
+  const t = await getTranslations("Auth");
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (session?.user) {
@@ -15,5 +17,13 @@ export default async function LoginPage() {
     }
   }
 
-  return <LoginScreen />;
+  return (
+    <>
+      <div className="sr-only">
+        <h1>{t("loginTitle")}</h1>
+        <p>{t("loginSubtitle")}</p>
+      </div>
+      <LoginScreen />
+    </>
+  );
 }

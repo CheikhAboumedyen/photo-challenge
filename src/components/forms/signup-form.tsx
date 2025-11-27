@@ -72,19 +72,8 @@ export function SignupForm() {
     },
     onSuccess: async (result, values) => {
       if (result.user) {
-        const { error: otpError } =
-          await authClient.emailOtp.sendVerificationOtp({
-            email: values.email,
-            type: "email-verification",
-          });
-
-        if (otpError) {
-          toast.error(otpError.message || "Failed to send verification code.");
-        } else {
-          toast.success("Signup successful! Please verify your email.");
-        }
-
-        router.push(`/verify-email?email=${encodeURIComponent(values.email)}`);
+        toast.success("Signup successful! Please verify your email.");
+        router.push("/verify-email");
       }
     },
     onError: (err: any) => {
@@ -135,7 +124,7 @@ export function SignupForm() {
             </label>
             <Input
               id="email"
-              type="email"
+              type="text"
               placeholder="you@email.com"
               {...form.register("email")}
               className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"

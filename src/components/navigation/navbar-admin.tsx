@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
@@ -89,6 +90,7 @@ export function NavbarAdmin() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           <Button
             variant="secondary"
             className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
@@ -143,6 +145,9 @@ export function NavbarAdmin() {
             </div>
 
             <div className="mt-6 grid gap-3">
+              <div className="flex items-center">
+                <LanguageSwitcher />
+              </div>
               <Button
                 className="w-full rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
                 onClick={() => {

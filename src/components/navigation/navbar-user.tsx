@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
@@ -90,6 +91,7 @@ export function NavbarUser({ initialUser }: NavbarUserProps) {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           <Button
             variant="secondary"
             className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
@@ -137,16 +139,21 @@ export function NavbarUser({ initialUser }: NavbarUserProps) {
               ))}
             </div>
 
-            <Button
-              variant="secondary"
-              className="mt-6 w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
-              onClick={() => {
-                setOpen(false);
-                handleSignOut();
-              }}
-            >
-              Sign out
-            </Button>
+            <div className="mt-6 grid gap-3">
+              <div className="flex items-center">
+                <LanguageSwitcher />
+              </div>
+              <Button
+                variant="secondary"
+                className="w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
+                onClick={() => {
+                  setOpen(false);
+                  handleSignOut();
+                }}
+              >
+                Sign out
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

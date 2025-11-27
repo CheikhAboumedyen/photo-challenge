@@ -1,0 +1,33 @@
+﻿{
+  "Common": {
+    "appName": "PixiVerse"
+  },
+  "Auth": {
+    "verifyEmailTitle": "Vérifiez votre adresse e-mail",
+    "signInTitle": "Se connecter",
+    "signUpTitle": "Créer votre compte",
+    "loginTitle": "Se connecter",
+    "loginSubtitle": "Accédez à vos soumissions, votes et retours.",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Mot de passe",
+    "loginButton": "Connexion",
+    "forgotPasswordLink": "Mot de passe oublié ?",
+    "loginFormTitle": "Connexion à PixiVerse",
+    "loginFormSubtitle": "Entrez vos identifiants pour accéder aux envois, votes et retours.",
+    "emailPlaceholder": "vous@email.com",
+    "passwordPlaceholder": "Votre mot de passe",
+    "loginSubmitting": "Connexion en cours...",
+    "loginContinueGoogle": "Continuer avec Google",
+    "loginNewToPixi": "Nouveau sur PixiVerse ?",
+    "createAccountLink": "Créer un compte",
+    "toastWelcomeBack": "Ravi de vous revoir !",
+    "toastLoginFailed": "Échec de la connexion",
+    "loginScreenBadge": "Bon retour",
+    "loginScreenTitle": "Connectez-vous pour poursuivre vos défis photo.",
+    "loginScreenSubtitle": "Accédez à vos soumissions, continuez de voter et restez en phase avec la communauté.",
+    "loginHighlightNewChallenges": "Nouveaux défis chaque semaine",
+    "loginHighlightBlindVoting": "Votes à l'aveugle et modération",
+    "loginHighlightCreatorsTogether": "Créateurs qui apprennent ensemble",
+    "loginNoAccountYet": "Pas encore de compte ?"
+  }
+}

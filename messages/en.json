@@ -1,0 +1,33 @@
+{
+  "Common": {
+    "appName": "PixiVerse"
+  },
+  "Auth": {
+    "verifyEmailTitle": "Verify your email",
+    "signInTitle": "Sign in",
+    "signUpTitle": "Create your account",
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Access your submissions, voting, and feedback.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginButton": "Login",
+    "forgotPasswordLink": "Forgot?",
+    "loginFormTitle": "Login to PixiVerse",
+    "loginFormSubtitle": "Enter your credentials to access uploads, voting, and feedback.",
+    "emailPlaceholder": "you@email.com",
+    "passwordPlaceholder": "Your password",
+    "loginSubmitting": "Logging in...",
+    "loginContinueGoogle": "Continue with Google",
+    "loginNewToPixi": "New to PixiVerse?",
+    "createAccountLink": "Create an account",
+    "toastWelcomeBack": "Welcome back!",
+    "toastLoginFailed": "Login failed",
+    "loginScreenBadge": "Welcome back",
+    "loginScreenTitle": "Sign in to continue your photo challenges.",
+    "loginScreenSubtitle": "Access your submissions, keep voting, and stay in sync with the community.",
+    "loginHighlightNewChallenges": "New challenges every week",
+    "loginHighlightBlindVoting": "Blind voting & moderation",
+    "loginHighlightCreatorsTogether": "Creators learning together",
+    "loginNoAccountYet": "No account yet?"
+  }
+}

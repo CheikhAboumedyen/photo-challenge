@@ -5,13 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
 
 const marketingLinks = [
-  { name: "About", href: "/about" },
-  { name: "Features", href: "/features" },
+  { name: "About", href: "/" },
   { name: "Leaderboard", href: "/leaderboard" },
-  { name: "Contact", href: "/contact" },
+  { name: "Contact", href: "/#" },
 ];
 
 export function NavbarPublic() {
@@ -67,6 +67,7 @@ export function NavbarPublic() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
+          <LanguageSwitcher />
           <Button
             variant="secondary"
             className="rounded-full border border-white/30 bg-transparent text-white hover:bg-white/10"
@@ -114,6 +115,9 @@ export function NavbarPublic() {
             ))}
 
             <div className="mt-2 grid gap-3">
+              <div className="flex items-center">
+                <LanguageSwitcher />
+              </div>
               <Button
                 variant="secondary"
                 className="w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"

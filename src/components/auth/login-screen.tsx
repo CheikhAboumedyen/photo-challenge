@@ -4,25 +4,28 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { LoginForm } from "@/components/forms/login-form";
 
-const highlights = [
-  {
-    icon: Sparkles,
-    label: "New challenges every week",
-  },
-  {
-    icon: ShieldCheck,
-    label: "Blind voting & moderation",
-  },
-  {
-    icon: Users,
-    label: "Creators learning together",
-  },
-];
-
 export function LoginScreen() {
+  const t = useTranslations("Auth");
+
+  const highlights = [
+    {
+      icon: Sparkles,
+      label: t("loginHighlightNewChallenges"),
+    },
+    {
+      icon: ShieldCheck,
+      label: t("loginHighlightBlindVoting"),
+    },
+    {
+      icon: Users,
+      label: t("loginHighlightCreatorsTogether"),
+    },
+  ];
+
   return (
     <div className="relative isolate min-h-screen bg-page text-brand-foreground">
       <div className="pointer-events-none absolute inset-0 opacity-40">
@@ -40,16 +43,13 @@ export function LoginScreen() {
             variant="secondary"
             className="w-fit rounded-full border border-white/20 bg-white/10 px-4 py-1 text-white/80 backdrop-blur"
           >
-            Welcome back
+            {t("loginScreenBadge")}
           </Badge>
           <div className="space-y-4">
             <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-              Sign in to continue your photo challenges.
+              {t("loginScreenTitle")}
             </h1>
-            <p className="text-lg text-muted">
-              Access your submissions, keep voting, and stay in sync with the
-              community.
-            </p>
+            <p className="text-lg text-muted">{t("loginScreenSubtitle")}</p>
           </div>
 
           <ul className="grid gap-4 sm:grid-cols-2">
@@ -68,7 +68,9 @@ export function LoginScreen() {
             href="/signup"
             className="inline-flex items-center gap-2 text-sm font-medium text-white/80 transition hover:text-white"
           >
-            No account yet? Create one <ArrowRight className="h-4 w-4" />
+            {t("loginNoAccountYet")}&nbsp;
+            {t("createAccountLink")}
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.section>
 
