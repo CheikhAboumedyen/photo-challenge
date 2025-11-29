@@ -3,17 +3,20 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Crown, Frame, ImageIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
 import { SignupForm } from "@/components/forms/signup-form";
 
-const perks = [
-  { icon: ImageIcon, label: "One photo per challenge" },
-  { icon: Frame, label: "Fast, reliable uploads" },
-  { icon: Crown, label: "Community leaderboard" },
-];
-
 export function SignupScreen() {
+  const t = useTranslations("Auth");
+
+  const perks = [
+    { icon: ImageIcon, label: t("signupHighlightOnePhoto") },
+    { icon: Frame, label: t("signupHighlightFastUploads") },
+    { icon: Crown, label: t("signupHighlightLeaderboard") },
+  ];
+
   return (
     <div className="relative isolate min-h-screen bg-page text-brand-foreground">
       <div className="pointer-events-none absolute inset-0 opacity-40">
@@ -31,16 +34,13 @@ export function SignupScreen() {
             variant="secondary"
             className="w-fit rounded-full border border-white/20 bg-white/10 px-4 py-1 text-white/80 backdrop-blur"
           >
-            Creator onboarding
+            {t("signupScreenBadge")}
           </Badge>
           <div className="space-y-4">
             <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-              Join weekly photo challenges with PixiVerse.
+              {t("signupScreenTitle")}
             </h1>
-            <p className="text-lg text-muted">
-              Join other photographers and creators, submit one photo per
-              challenge, and grow through friendly voting.
-            </p>
+            <p className="text-lg text-muted">{t("signupScreenSubtitle")}</p>
           </div>
 
           <ul className="grid gap-4 sm:grid-cols-2">
@@ -59,7 +59,9 @@ export function SignupScreen() {
             href="/login"
             className="inline-flex items-center gap-2 text-sm font-medium text-white/80 transition hover:text-white"
           >
-            Already have an account? Log in <ArrowRight className="h-4 w-4" />
+            {t("alreadyHaveAccount")}&nbsp;
+            {t("backToLoginLink")}
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.section>
 

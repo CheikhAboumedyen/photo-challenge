@@ -1,8 +1,12 @@
 // src/components/navigation/app-footer.tsx
+"use client";
+
 import Link from "next/link";
 import { FaFacebook, FaWhatsapp, FaInstagram } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 export function AppFooter() {
+  const t = useTranslations("Footer");
   const currentYear = new Date().getFullYear();
 
   return (
@@ -14,24 +18,19 @@ export function AppFooter() {
             <p className="text-lg font-semibold text-white tracking-tight">
               PixiVerse
             </p>
-            <p className="text-xs text-white/50">
-              A creative space where photographers grow together.
-            </p>
+            <p className="text-xs text-white/50">{t("tagline")}</p>
           </div>
 
           {/* Navigation */}
           <nav className="flex flex-wrap justify-center gap-4 text-xs sm:justify-end">
-            <Link href="/" className="transition hover:text-white">
-              Landing
-            </Link>
             <Link href="/home" className="transition hover:text-white">
-              Home
+              {t("linkHome")}
             </Link>
             <Link href="/submissions" className="transition hover:text-white">
-              Submissions
+              {t("linkSubmissions")}
             </Link>
             <Link href="/leaderboard" className="transition hover:text-white">
-              Leaderboard
+              {t("linkLeaderboard")}
             </Link>
           </nav>
 
@@ -66,7 +65,7 @@ export function AppFooter() {
 
         {/* Bottom line */}
         <p className="mt-5 text-center text-[11px] text-white/40 sm:text-right">
-          © {currentYear} PixiVerse · Made in Mauritania.
+          {t("copyright", { year: currentYear })}
         </p>
       </div>
     </footer>

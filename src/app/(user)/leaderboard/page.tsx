@@ -1,125 +1,20 @@
 // src/app/(user)/leaderboard/page.tsx
 import Image from "next/image";
 import { format } from "date-fns";
+import { getTranslations } from "next-intl/server";
 import {
   getActiveChallenge,
   getLeaderboardForChallenge,
   getPastChallengesWithTopPhotos,
 } from "./actions";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Crown, Sparkles } from "lucide-react";
-
-function PodiumCard({
-  userName,
-  voteCount,
-  rank,
-}: {
-  userName: string;
-  voteCount: number;
-  rank: number;
-}) {
-  const tiers = [
-    "from-indigo-500 via-purple-500 to-pink-500",
-    "from-slate-500 to-slate-700",
-    "from-slate-600 to-slate-800",
-  ];
-  return (
-    <div className="relative flex flex-col items-center gap-3 rounded-[28px] border border-white/10 bg-panel/80 p-5 text-center text-white">
-      {rank === 1 && (
-        <Crown className="absolute -top-4 h-7 w-7 text-brand-accent drop-shadow-lg" />
-      )}
-      <Avatar className="h-16 w-16 border border-white/30 bg-black/20">
-        <AvatarFallback className="text-lg font-semibold text-white/80">
-          {userName[0]?.toUpperCase() ?? "C"}
-        </AvatarFallback>
-      </Avatar>
-      <div>
-        <p className="text-lg font-semibold">{userName}</p>
-        <p className="text-xs text-white/70">{voteCount} votes</p>
-      </div>
-      <div
-        className={`mt-2 h-16 w-16 rounded-full bg-linear-to-br ${
-          tiers[rank - 1] ?? tiers[2]
-        } text-center text-sm font-semibold leading-16`}
-      >
-        #{rank}
-      </div>
-    </div>
-  );
-}
-
-function LeaderboardRow({
-  userName,
-  voteCount,
-  rank,
-}: {
-  userName: string;
-  voteCount: number;
-  rank: number;
-}) {
-  return (
-    <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-white">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10 border border-white/20 bg-transparent">
-          <AvatarFallback className="text-sm text-white/80 font-medium">
-            {userName[0]?.toUpperCase() ?? "C"}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="font-medium">{userName}</p>
-          <p className="text-xs text-white/60">Rank #{rank}</p>
-        </div>
-      </div>
-      <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/70">
-        {voteCount} votes
-      </span>
-    </div>
-  );
-}
-
-function PhotoCard({
-  imageUrl,
-  caption,
-  userName,
-  voteCount,
-}: {
-  imageUrl: string;
-  caption?: string;
-  userName: string;
-  voteCount: number;
-}) {
-  return (
-    <div className="overflow-hidden rounded-3xl border border-white/10 bg-panel/80 shadow-[0_20px_45px_rgba(2,6,23,0.55)]">
-      <div className="relative h-48 w-full">
-        <Image
-          src={imageUrl}
-          alt={caption || "Photo"}
-          fill
-          className="object-cover"
-        />
-      </div>
-      <div className="space-y-2 p-4 text-sm text-white/80">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9 border border-white/20 bg-transparent">
-            <AvatarFallback className="text-sm text-white/80">
-              {userName[0]?.toUpperCase() ?? "C"}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium text-white">{userName}</p>
-            {caption && (
-              <p className="text-xs text-white/60 line-clamp-2">{caption}</p>
-            )}
-          </div>
-        </div>
-        <p className="text-xs text-white/60">{voteCount} votes</p>
-      </div>
-    </div>
-  );
-}
+import { Sparkles } from "lucide-react";
+import { LeaderboardRow } from "@/components/leaderboard/leaderboard-row";
+import { PhotoCard } from "@/components/leaderboard/photo-card";
+import { PodiumCard } from "@/components/leaderboard/podium-card";
 
 export default async function LeaderboardPage() {
+  const t = await getTranslations("Leaderboard");
   const activeChallenge = await getActiveChallenge();
   const leaderboard = activeChallenge
     ? await getLeaderboardForChallenge(activeChallenge.id)
@@ -139,14 +34,12 @@ export default async function LeaderboardPage() {
                 variant="secondary"
                 className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
               >
-                Live leaderboard
+                {t("liveBadge")}
               </Badge>
               <h1 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">
                 {activeChallenge.title}
               </h1>
-              <p className="text-sm text-white/70">
-                Tracking every vote for the current challenge.
-              </p>
+              <p className="text-sm text-white/70">{t("liveSubtitle")}</p>
             </div>
             <p className="text-sm text-white/70">
               {format(new Date(activeChallenge.startDate), "MMM dd")} -{" "}
@@ -155,7 +48,7 @@ export default async function LeaderboardPage() {
           </div>
 
           {leaderboard.length === 0 ? (
-            <p className="mt-6 text-white/70">No votes yet.</p>
+            <p className="mt-6 text-white/70">{t("noVotesYet")}</p>
           ) : (
             <div className="mt-10 flex flex-col gap-8 lg:h-120 lg:flex-row lg:items-stretch lg:min-h-0">
               <div className="flex h-full min-h-0 flex-col gap-5 lg:flex-1">
@@ -163,7 +56,7 @@ export default async function LeaderboardPage() {
                   {leaderboard.slice(0, 3).map((u, i) => (
                     <PodiumCard
                       key={u.userId}
-                      userName={u.userName || "Anonymous"}
+                      userName={u.userName || t("anonymousUser")}
                       voteCount={u.voteCount}
                       rank={i + 1}
                     />
@@ -176,7 +69,7 @@ export default async function LeaderboardPage() {
                       {rest.map((u, idx) => (
                         <LeaderboardRow
                           key={u.userId}
-                          userName={u.userName || "Anonymous"}
+                          userName={u.userName || t("anonymousUser")}
                           voteCount={u.voteCount}
                           rank={idx + 4}
                         />
@@ -188,35 +81,35 @@ export default async function LeaderboardPage() {
 
               <div className="flex h-full min-h-0 flex-col rounded-[28px] border border-white/10 bg-black/15 p-6 text-white shadow-[0_20px_45px_rgba(2,6,23,0.55)] lg:w-full lg:max-w-sm">
                 <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-                  Winner spotlight
+                  {t("winnerSpotlight")}
                 </p>
                 {winner?.photoUrl ? (
                   <>
                     <p className="mt-2 text-2xl font-semibold">
-                      {winner.userName || "Anonymous"}
+                      {winner.userName || t("anonymousUser")}
                     </p>
                     <p className="text-sm text-white/70">
-                      {winner.photoCaption || "Untitled photo"}
+                      {winner.photoCaption || t("winnerCaptionFallback")}
                     </p>
                     <div className="mt-5 flex-1 overflow-hidden rounded-2xl border border-white/10">
                       <Image
                         src={winner.photoUrl}
-                        alt={winner.photoCaption || "Winning photo"}
+                        alt={winner.photoCaption || t("winnerPhotoAlt")}
                         width={640}
                         height={400}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <p className="mt-3 text-xs text-white/60">
-                      {winner.voteCount} votes · Challenge leader
+                      {t("winnerVotesLabel", { count: winner.voteCount })}
                     </p>
                   </>
                 ) : (
                   <div className="mt-6 flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/20 p-6 text-center text-white/70">
                     <Sparkles className="h-6 w-6 text-brand-accent" />
-                    <p>No photo found for the current leader yet.</p>
+                    <p>{t("winnerNoPhotoTitle")}</p>
                     <p className="text-xs text-white/50">
-                      The top photo will be featured here once it's uploaded.
+                      {t("winnerNoPhotoBody")}
                     </p>
                   </div>
                 )}
@@ -233,20 +126,17 @@ export default async function LeaderboardPage() {
               variant="secondary"
               className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
             >
-              Archive highlights
+              {t("archiveBadge")}
             </Badge>
             <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
-              Past challenges
+              {t("archiveTitle")}
             </h2>
-            <p className="text-sm text-white/70">
-              Study strong uploads from past challenges to prepare for the next
-              one.
-            </p>
+            <p className="text-sm text-white/70">{t("archiveSubtitle")}</p>
           </div>
         </div>
 
         {pastChallenges.length === 0 ? (
-          <p className="mt-6 text-white/70">No past challenges yet.</p>
+          <p className="mt-6 text-white/70">{t("noPastChallenges")}</p>
         ) : (
           <div className="mt-10 space-y-10">
             {pastChallenges.map((ch) => (
@@ -262,12 +152,14 @@ export default async function LeaderboardPage() {
                     </p>
                   </div>
                   <Badge className="w-fit rounded-full border border-white/20 bg-transparent text-xs text-white/70">
-                    {ch.topPhotos.length} featured photos
+                    {t("featuredPhotosBadge", { count: ch.topPhotos.length })}
                   </Badge>
                 </div>
 
                 {ch.topPhotos.length === 0 ? (
-                  <p className="text-sm text-white/60">No photos uploaded.</p>
+                  <p className="text-sm text-white/60">
+                    {t("noPhotosForChallenge")}
+                  </p>
                 ) : (
                   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {ch.topPhotos.map((p) => (
@@ -275,7 +167,7 @@ export default async function LeaderboardPage() {
                         key={p.photoId}
                         imageUrl={p.imageUrl}
                         caption={p.caption || undefined}
-                        userName={p.userName || "Anonymous"}
+                        userName={p.userName || t("anonymousUser")}
                         voteCount={p.voteCount}
                       />
                     ))}

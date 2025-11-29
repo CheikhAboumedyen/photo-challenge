@@ -1,12 +1,14 @@
-// src\app\(auth)\verify-email\page.tsx
+// src/app/(auth)/verify-email/page.tsx
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { VerifyEmailForm } from "@/components/forms/verify-email-form";
 import { auth } from "@/lib/auth/auth";
 
 export default async function VerifyEmailPage() {
+  const t = await getTranslations("Auth");
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user) {
@@ -27,6 +29,10 @@ export default async function VerifyEmailPage() {
       </div>
 
       <div className="relative mx-auto flex max-w-lg justify-center">
+        <div className="sr-only">
+          <h1>{t("verifyEmailPageTitle")}</h1>
+          <p>{t("verifyEmailPageSubtitle")}</p>
+        </div>
         <VerifyEmailForm email={email} />
       </div>
     </div>

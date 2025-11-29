@@ -1,8 +1,9 @@
-// src\components\forms\verify-email-form.tsx
+// src/components/forms/verify-email-form.tsx
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ type VerifyEmailFormProps = {
 
 export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
   const router = useRouter();
+  const t = useTranslations("Auth");
   const normalizedEmail = email.trim().toLowerCase();
   const [otp, setOtp] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -38,16 +40,15 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
     if (isSending || cooldownSeconds > 0) return;
 
     setIsSending(true);
-    // Sends a new OTP every time (including auto-send on mount); previous codes become stale once a new one is issued.
     const { error } = await authClient.emailOtp.sendVerificationOtp({
       email: normalizedEmail,
       type: "email-verification",
     });
 
     if (error) {
-      toast.error(error.message || "Failed to send verification code.");
+      toast.error(error.message || t("toastVerifyError"));
     } else {
-      toast.success("Verification code sent to your email.");
+      toast.success(t("verifySendSuccess"));
       setHasSent(true);
       setCooldownSeconds(60);
     }
@@ -64,12 +65,12 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
     });
 
     if (error) {
-      toast.error(error.message || "Verification failed.");
+      toast.error(error.message || t("toastVerifyError"));
       setIsVerifying(false);
       return;
     }
 
-    toast.success("Email verified successfully.");
+    toast.success(t("toastVerifySuccess"));
     router.push("/home");
     setIsVerifying(false);
   };
@@ -96,16 +97,19 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
     void handleSendCode();
   }, [normalizedEmail]);
 
+  const getSendButtonLabel = () => {
+    if (isSending) return t("resendCodeSending");
+    if (cooldownSeconds > 0) return t("resendCodeCooldown", { seconds: cooldownSeconds });
+    if (hasSent) return t("resendCodeButton");
+    return t("verifyEmailSendCode");
+  };
+
   return (
     <Card className="w-full overflow-hidden border border-nav-border/50 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
       <CardHeader className="space-y-3 text-center">
-        <CardTitle className="text-3xl font-semibold">
-          Verify your email
-        </CardTitle>
+        <CardTitle className="text-3xl font-semibold">{t("verifyEmailHeading")}</CardTitle>
         <CardDescription className="text-sm text-muted">
-          We&apos;ve sent a 6-digit code to{" "}
-          <span className="font-medium text-white">{email}</span>. Enter it
-          below to confirm your email and finish setting up your account.
+          {t("verifyEmailDescription", { email })}
         </CardDescription>
       </CardHeader>
 
@@ -119,19 +123,13 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
               variant="outline"
               className="h-12 rounded-full border-nav-border/60 bg-panel px-6 text-sm font-semibold text-white transition hover:bg-panel/80 focus-visible:ring-2 focus-visible:ring-brand-primary/40 cursor-pointer"
             >
-              {isSending
-                ? "Sending..."
-                : cooldownSeconds > 0
-                ? `Resend in ${cooldownSeconds}s`
-                : hasSent
-                ? "Resend code"
-                : "Send code"}
+              {getSendButtonLabel()}
             </Button>
           </div>
 
           <div className="space-y-2">
             <label htmlFor="otp" className="text-sm font-medium text-white/90">
-              Verification code
+              {t("otpLabel")}
             </label>
             <div className="flex justify-center">
               <InputOTP
@@ -161,7 +159,7 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
             className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
             disabled={isVerifying || otp.length !== 6}
           >
-            {isVerifying ? "Verifying..." : "Verify email"}
+            {isVerifying ? t("verifyEmailSubmitting") : t("verifyEmailButton")}
           </Button>
         </form>
       </CardContent>

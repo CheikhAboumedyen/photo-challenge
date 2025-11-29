@@ -1,8 +1,9 @@
-// src\components\forms\forgot-password-form.tsx
+// src/components/forms/forgot-password-form.tsx
 "use client";
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { authClient } from "@/lib/auth/auth-client";
+import Link from "next/link";
 
 type ForgotPasswordFormProps = {
   initialEmail?: string;
@@ -32,6 +34,7 @@ export function ForgotPasswordForm({
   lockEmail,
 }: ForgotPasswordFormProps) {
   const router = useRouter();
+  const t = useTranslations("Auth");
   const [step, setStep] = useState<1 | 2>(1);
   const [email, setEmail] = useState(initialEmail ?? "");
   const [otp, setOtp] = useState("");
@@ -44,7 +47,7 @@ export function ForgotPasswordForm({
     const normalizedEmail = email.trim().toLowerCase();
 
     if (!normalizedEmail) {
-      toast.error("Please enter your email.");
+      toast.error(t("forgotEnterEmail"));
       return;
     }
 
@@ -54,9 +57,9 @@ export function ForgotPasswordForm({
     });
 
     if (error) {
-      toast.error(error.message || "Failed to send reset code.");
+      toast.error(error.message || t("forgotSendError"));
     } else {
-      toast.success("Reset code sent to your email.");
+      toast.success(t("forgotSendSuccess"));
       setStep(2);
     }
 
@@ -67,17 +70,17 @@ export function ForgotPasswordForm({
     event.preventDefault();
 
     if (!otp) {
-      toast.error("Please enter the code we sent to your email.");
+      toast.error(t("forgotEnterOtp"));
       return;
     }
 
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters.");
+      toast.error(t("forgotPasswordTooShort"));
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
+      toast.error(t("forgotPasswordsMismatch"));
       return;
     }
 
@@ -92,12 +95,12 @@ export function ForgotPasswordForm({
     });
 
     if (error) {
-      toast.error(error.message || "Failed to reset password.");
+      toast.error(error.message || t("forgotResetError"));
       setIsResetting(false);
       return;
     }
 
-    toast.success("Password reset successfully. You can now log in.");
+    toast.success(t("forgotResetSuccess"));
     router.push("/login");
     setIsResetting(false);
   };
@@ -105,11 +108,13 @@ export function ForgotPasswordForm({
   return (
     <Card className="w-full overflow-hidden border border-nav-border/50 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
       <CardHeader className="space-y-3 text-center">
-        <CardTitle className="text-3xl font-semibold">Reset your password</CardTitle>
+        <CardTitle className="text-3xl font-semibold">
+          {step === 1 ? t("forgotStep1Title") : t("forgotStep2Title")}
+        </CardTitle>
         <CardDescription className="text-sm text-muted">
           {step === 1
-            ? "Enter your email to receive a reset code."
-            : `We\u2019ve sent a 6-digit code to ${email}. Enter it below with your new password.`}
+            ? t("forgotStep1Subtitle")
+            : t("forgotStep2Subtitle", { email })}
         </CardDescription>
       </CardHeader>
 
@@ -117,22 +122,25 @@ export function ForgotPasswordForm({
         {step === 1 ? (
           <div className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-white/90">
-                Email
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-white/90"
+              >
+                {t("forgotEmailLabel")}
               </label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@email.com"
+                placeholder={t("forgotEmailPlaceholder")}
                 className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
                 readOnly={lockEmail}
                 disabled={lockEmail}
               />
               {lockEmail ? (
                 <p className="text-xs text-white/60">
-                  You are resetting the password for this signed-in account.
+                  {t("forgotLockedEmailHelp")}
                 </p>
               ) : null}
             </div>
@@ -142,14 +150,19 @@ export function ForgotPasswordForm({
               disabled={isSending}
               className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
             >
-              {isSending ? "Sending..." : "Send reset code"}
+              {isSending
+                ? t("forgotSendCodeSubmitting")
+                : t("forgotSendCodeButton")}
             </Button>
           </div>
         ) : (
           <form className="space-y-5" onSubmit={handleReset}>
             <div className="space-y-2">
-              <label htmlFor="otp" className="text-sm font-medium text-white/90">
-                Reset code
+              <label
+                htmlFor="otp"
+                className="text-sm font-medium text-white/90"
+              >
+                {t("forgotOtpLabel")}
               </label>
               <div className="flex justify-center">
                 <InputOTP
@@ -175,27 +188,35 @@ export function ForgotPasswordForm({
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium text-white/90">
-                New password
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-white/90"
+              >
+                {t("forgotNewPasswordLabel")}
               </label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                placeholder={t("forgotNewPasswordPlaceholder")}
                 className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-sm font-medium text-white/90">
-                Confirm password
+              <label
+                htmlFor="confirmPassword"
+                className="text-sm font-medium text-white/90"
+              >
+                {t("forgotConfirmPasswordLabel")}
               </label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
+                placeholder={t("forgotConfirmPasswordPlaceholder")}
                 className="h-12 border-nav-border/50 bg-transparent text-brand-foreground placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
             </div>
@@ -205,8 +226,19 @@ export function ForgotPasswordForm({
               className="h-12 w-full rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary transition hover:opacity-90"
               disabled={isResetting}
             >
-              {isResetting ? "Resetting..." : "Reset password"}
+              {isResetting
+                ? t("forgotResetSubmitting")
+                : t("forgotResetButton")}
             </Button>
+
+            <p className="text-center text-sm text-white/70">
+              <Link
+                href="/login"
+                className="font-semibold text-white hover:text-brand-accent"
+              >
+                {t("backToLoginLink")}
+              </Link>
+            </p>
           </form>
         )}
       </CardContent>

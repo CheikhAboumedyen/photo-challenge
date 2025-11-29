@@ -5,19 +5,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
 
-const marketingLinks = [
-  { name: "About", href: "/" },
-  { name: "Leaderboard", href: "/leaderboard" },
-  { name: "Contact", href: "/#" },
-];
-
 export function NavbarPublic() {
+  const t = useTranslations("Navigation");
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  const marketingLinks = [
+    { name: t("publicAbout"), href: "/" },
+    { name: t("publicLeaderboard"), href: "/leaderboard" },
+    { name: t("publicContact"), href: "/#" },
+  ];
 
   const handleNavigate = (href: string) => {
     router.push(href);
@@ -36,9 +38,7 @@ export function NavbarPublic() {
           <div className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.4em] text-white/70">
             PX
           </div>
-          <span className="bg-brand-accent bg-clip-text text-transparent">
-            PixiVerse
-          </span>
+          <span className="bg-brand-accent bg-clip-text text-transparent">PixiVerse</span>
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
@@ -73,13 +73,13 @@ export function NavbarPublic() {
             className="rounded-full border border-white/30 bg-transparent text-white hover:bg-white/10"
             onClick={() => router.push("/login")}
           >
-            Log in
+            {t("publicLogin")}
           </Button>
           <Button
             className="rounded-full bg-white text-slate-950 hover:bg-slate-100"
             onClick={() => router.push("/signup")}
           >
-            Join now
+            {t("publicJoin")}
           </Button>
         </div>
 
@@ -123,13 +123,13 @@ export function NavbarPublic() {
                 className="w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
                 onClick={() => handleNavigate("/login")}
               >
-                Log in
+                {t("publicLogin")}
               </Button>
               <Button
                 className="w-full rounded-full bg-white text-slate-950 hover:bg-slate-100"
                 onClick={() => handleNavigate("/signup")}
               >
-                Join now
+                {t("publicJoin")}
               </Button>
             </div>
           </motion.div>

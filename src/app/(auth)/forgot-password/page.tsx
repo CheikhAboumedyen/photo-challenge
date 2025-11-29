@@ -1,11 +1,13 @@
-// src\app\(auth)\forgot-password\page.tsx
+// src/app/(auth)/forgot-password/page.tsx
 
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
 import { ForgotPasswordForm } from "@/components/forms/forgot-password-form";
 import { auth } from "@/lib/auth/auth";
 
 export default async function ForgotPasswordPage() {
+  const t = await getTranslations("Auth");
   const session = await auth.api.getSession({ headers: await headers() });
   const email = session?.user?.email ?? "";
   const lockEmail = Boolean(session?.user);
@@ -18,6 +20,10 @@ export default async function ForgotPasswordPage() {
       </div>
 
       <div className="relative mx-auto flex max-w-lg justify-center">
+        <div className="sr-only">
+          <h1>{t("forgotPasswordPageTitle")}</h1>
+          <p>{t("forgotPasswordPageSubtitle")}</p>
+        </div>
         <ForgotPasswordForm initialEmail={email} lockEmail={lockEmail} />
       </div>
     </div>

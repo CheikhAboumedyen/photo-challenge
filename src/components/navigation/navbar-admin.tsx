@@ -5,16 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
-const adminLinks = [
-  { name: "Dashboard", href: "/admin" },
-  { name: "Challenges", href: "/admin/challenges" },
-  { name: "Photos", href: "/admin/photos" },
-  { name: "Leaderboard", href: "/leaderboard" },
-  { name: "Profile", href: "/profile" },
+const adminLinksConfig = [
+  { key: "adminDashboard", href: "/admin" },
+  { key: "adminChallenges", href: "/admin/challenges" },
+  { key: "adminPhotos", href: "/admin/photos" },
+  { key: "adminLeaderboard", href: "/leaderboard" },
+  { key: "adminProfile", href: "/profile" },
 ];
 
 const isActivePath = (pathname: string, href: string) => {
@@ -25,10 +26,13 @@ const isActivePath = (pathname: string, href: string) => {
 };
 
 export function NavbarAdmin() {
+  const t = useTranslations("Navigation");
   const { data, isPending } = authClient.useSession();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  const adminLinks = adminLinksConfig.map((link) => ({ ...link, name: t(link.key) }));
 
   const sessionUser = data?.user;
 
@@ -59,11 +63,9 @@ export function NavbarAdmin() {
           className="flex items-center gap-3 font-semibold tracking-tight text-brand-foreground"
         >
           <div className="rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-[0.3em] text-white/70">
-            Admin
+            {t("adminBadge")}
           </div>
-          <span className="bg-brand-accent bg-clip-text text-transparent">
-            PixiVerse
-          </span>
+          <span className="bg-brand-accent bg-clip-text text-transparent">PixiVerse</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
@@ -96,13 +98,13 @@ export function NavbarAdmin() {
             className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
             onClick={handleSignOut}
           >
-            Sign out
+            {t("adminSignOut")}
           </Button>
           <Button
             className="rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
             onClick={() => router.push("/home")}
           >
-            View site
+            {t("adminViewSite")}
           </Button>
         </div>
 
@@ -155,7 +157,7 @@ export function NavbarAdmin() {
                   setOpen(false);
                 }}
               >
-                View site
+                {t("adminViewSite")}
               </Button>
               <Button
                 variant="secondary"
@@ -165,7 +167,7 @@ export function NavbarAdmin() {
                   handleSignOut();
                 }}
               >
-                Sign out
+                {t("adminSignOut")}
               </Button>
             </div>
           </motion.div>
