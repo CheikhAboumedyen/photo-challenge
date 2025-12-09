@@ -151,8 +151,7 @@
     "adminPhotos": "Photos",
     "adminLeaderboard": "Classement",
     "adminProfile": "Profil",
-    "adminSignOut": "Se déconnecter",
-    "adminViewSite": "Voir le site"
+    "adminSignOut": "Se déconnecter"
   },
   "Leaderboard": {
     "liveBadge": "Classement en direct",

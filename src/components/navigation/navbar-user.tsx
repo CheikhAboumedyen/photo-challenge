@@ -1,3 +1,4 @@
+// src\components\navigation\navbar-user.tsx
 "use client";
 
 import Link from "next/link";
@@ -69,7 +70,9 @@ export function NavbarUser({ initialUser }: NavbarUserProps) {
           <div className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.4em] text-white/70">
             PX
           </div>
-          <span className="bg-brand-accent bg-clip-text text-transparent">PixiVerse</span>
+          <span className="bg-brand-accent bg-clip-text text-transparent">
+            PixiVerse
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
@@ -146,7 +149,7 @@ export function NavbarUser({ initialUser }: NavbarUserProps) {
 
             <div className="mt-6 grid gap-3">
               <div className="flex items-center">
-                <LanguageSwitcher />
+                <LanguageSwitcher variant="full" />
               </div>
               <Button
                 variant="secondary"

@@ -128,7 +128,6 @@ export default async function AdminChallengesPage() {
                       action={async () => {
                         "use server";
                         await deleteChallenge(ch.id);
-                        revalidatePath("/admin/challenges");
                       }}
                     >
                       <AlertDialog>

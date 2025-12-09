@@ -87,7 +87,7 @@ export async function updateChallenge(
       })
       .where(eq(schema.challenge.id, id));
 
-    revalidatePath("/admin/challenge");
+    revalidatePath("/admin/challenges");
     return { success: true };
   } catch (error) {
     console.error("Error updating challenge:", error);
@@ -100,7 +100,7 @@ export async function updateChallenge(
 export async function deleteChallenge(id: string) {
   try {
     await db.delete(schema.challenge).where(eq(schema.challenge.id, id));
-    revalidatePath("/admin/challenge");
+    revalidatePath("/admin/challenges");
     return { success: true };
   } catch (error) {
     console.error("Error deleting challenge:", error);

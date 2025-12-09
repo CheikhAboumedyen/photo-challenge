@@ -32,7 +32,10 @@ export function NavbarAdmin() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const adminLinks = adminLinksConfig.map((link) => ({ ...link, name: t(link.key) }));
+  const adminLinks = adminLinksConfig.map((link) => ({
+    ...link,
+    name: t(link.key),
+  }));
 
   const sessionUser = data?.user;
 
@@ -65,7 +68,9 @@ export function NavbarAdmin() {
           <div className="rounded-full border border-white/30 px-3 py-1 text-xs uppercase tracking-[0.3em] text-white/70">
             {t("adminBadge")}
           </div>
-          <span className="bg-brand-accent bg-clip-text text-transparent">PixiVerse</span>
+          <span className="bg-brand-accent bg-clip-text text-transparent">
+            PixiVerse
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
@@ -99,12 +104,6 @@ export function NavbarAdmin() {
             onClick={handleSignOut}
           >
             {t("adminSignOut")}
-          </Button>
-          <Button
-            className="rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
-            onClick={() => router.push("/home")}
-          >
-            {t("adminViewSite")}
           </Button>
         </div>
 
@@ -148,7 +147,7 @@ export function NavbarAdmin() {
 
             <div className="mt-6 grid gap-3">
               <div className="flex items-center">
-                <LanguageSwitcher />
+                <LanguageSwitcher variant="full" />
               </div>
               <Button
                 className="w-full rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"

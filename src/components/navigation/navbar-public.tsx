@@ -38,7 +38,9 @@ export function NavbarPublic() {
           <div className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.4em] text-white/70">
             PX
           </div>
-          <span className="bg-brand-accent bg-clip-text text-transparent">PixiVerse</span>
+          <span className="bg-brand-accent bg-clip-text text-transparent">
+            PixiVerse
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm text-white/70 md:flex">
@@ -70,6 +72,7 @@ export function NavbarPublic() {
           <LanguageSwitcher />
           <Button
             variant="secondary"
+            size="sm"
             className="rounded-full border border-white/30 bg-transparent text-white hover:bg-white/10"
             onClick={() => router.push("/login")}
           >
@@ -77,6 +80,7 @@ export function NavbarPublic() {
           </Button>
           <Button
             className="rounded-full bg-white text-slate-950 hover:bg-slate-100"
+            size="sm"
             onClick={() => router.push("/signup")}
           >
             {t("publicJoin")}
@@ -116,7 +120,7 @@ export function NavbarPublic() {
 
             <div className="mt-2 grid gap-3">
               <div className="flex items-center">
-                <LanguageSwitcher />
+                <LanguageSwitcher variant="full" />
               </div>
               <Button
                 variant="secondary"

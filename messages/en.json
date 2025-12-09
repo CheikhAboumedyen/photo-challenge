@@ -151,8 +151,7 @@
     "adminPhotos": "Photos",
     "adminLeaderboard": "Leaderboard",
     "adminProfile": "Profile",
-    "adminSignOut": "Sign out",
-    "adminViewSite": "View site"
+    "adminSignOut": "Sign out"
   },
   "Leaderboard": {
     "liveBadge": "Live leaderboard",

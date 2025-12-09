@@ -1,3 +1,5 @@
+// src\components\buttons\signOut.tsx
+
 "use client";
 
 import { useRouter } from "next/navigation";

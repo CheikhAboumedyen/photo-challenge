@@ -87,11 +87,16 @@ export function VoteButton({
       <Button
         onClick={handleClick}
         disabled={isPending || disabled}
-        className={`w-full transition-all ${
-          isVoted
-            ? "bg-gray-100 hover:bg-gray-200 text-gray-700"
-            : "bg-gray-900 hover:bg-black text-white"
-        }`}
+        className={`
+    w-full rounded-full font-semibold transition-all
+    ${
+      disabled
+        ? "bg-gray-600/40 text-gray-300 cursor-not-allowed"
+        : isVoted
+        ? "bg-white/10 text-white hover:bg-white/20"
+        : "bg-brand-gradient text-white shadow-md hover:opacity-90"
+    }
+  `}
       >
         {isPending
           ? "Processing..."
