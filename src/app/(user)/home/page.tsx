@@ -1,7 +1,8 @@
-// src\app\(user)\home\page.tsx
+﻿// src\app\(user)\home\page.tsx
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
 import { auth } from "@/lib/auth/auth";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -14,28 +15,6 @@ import {
 } from "@/app/(user)/leaderboard/actions";
 import { getSiteStats } from "@/lib/stats";
 
-const weeklyRhythm = [
-  {
-    label: "Upload",
-    range: "While entries are open",
-    description:
-      "Submit one photo for the current challenge with a short caption.",
-    icon: Upload,
-  },
-  {
-    label: "Vote",
-    range: "While voting is open",
-    description: "Vote on other entries without seeing who posted them.",
-    icon: Users,
-  },
-  {
-    label: "Celebrate",
-    range: "When results are published",
-    description: "See which photos ranked highest and learn from what worked.",
-    icon: Trophy,
-  },
-];
-
 export default async function HomeDashboard() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) {
@@ -45,23 +24,46 @@ export default async function HomeDashboard() {
     redirect("/admin");
   }
 
+  const t = await getTranslations("Home");
+  const locale = await getLocale();
+
   const active = await getActiveChallenge();
   const siteStats = await getSiteStats();
   const leaderboardPreview = active
     ? await getLeaderboardPreviewForChallenge(active.id)
     : [];
-  const numberFormatter = new Intl.NumberFormat("en-US");
+  const numberFormatter = new Intl.NumberFormat(locale);
+  const weeklyRhythm = [
+    {
+      label: t("weeklyRhythm.upload.label"),
+      range: t("weeklyRhythm.upload.range"),
+      description: t("weeklyRhythm.upload.description"),
+      icon: Upload,
+    },
+    {
+      label: t("weeklyRhythm.vote.label"),
+      range: t("weeklyRhythm.vote.range"),
+      description: t("weeklyRhythm.vote.description"),
+      icon: Users,
+    },
+    {
+      label: t("weeklyRhythm.celebrate.label"),
+      range: t("weeklyRhythm.celebrate.range"),
+      description: t("weeklyRhythm.celebrate.description"),
+      icon: Trophy,
+    },
+  ];
   const communityStats = [
     {
-      label: "Photos submitted",
+      label: t("communityStats.photosSubmitted"),
       value: numberFormatter.format(siteStats.totalPhotos),
     },
     {
-      label: "Active members",
+      label: t("communityStats.activeMembers"),
       value: numberFormatter.format(siteStats.totalMembers),
     },
     {
-      label: "Votes cast",
+      label: t("communityStats.votesCast"),
       value: numberFormatter.format(siteStats.totalVotes),
     },
   ];
@@ -85,24 +87,24 @@ export default async function HomeDashboard() {
                   variant="secondary"
                   className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
                 >
-                  Active challenge
+                  {t("activeChallengeBadge")}
                 </Badge>
                 {countdown && (
                   <span className="text-sm text-white/70">
-                    Ends {countdown}
+                    {t("endsLabel", { countdown })}
                   </span>
                 )}
               </div>
 
               <div className="space-y-2">
                 <h1 className="text-3xl font-semibold sm:text-4xl">
-                  {active ? active.title : "No active challenge right now"}
+                  {active ? active.title : t("noActiveChallengeTitle")}
                 </h1>
                 {active?.description ? (
                   <p className="text-base text-muted">{active.description}</p>
                 ) : (
                   <p className="text-base text-muted">
-                    You’ll see the next challenge here as soon as it goes live.
+                    {t("noActiveChallengeDescription")}
                   </p>
                 )}
               </div>
@@ -111,7 +113,7 @@ export default async function HomeDashboard() {
                 <div className="grid gap-4 rounded-2xl border border-white/10 bg-black/10 p-4 text-sm sm:grid-cols-3">
                   <div className="space-y-1">
                     <p className="flex items-center gap-2 text-white/60">
-                      <CalendarRange className="h-4 w-4" /> Start
+                      <CalendarRange className="h-4 w-4" /> {t("startLabel")}
                     </p>
                     <p className="font-medium text-white">
                       {format(new Date(active.startDate), "PPP p")}
@@ -119,7 +121,7 @@ export default async function HomeDashboard() {
                   </div>
                   <div className="space-y-1">
                     <p className="flex items-center gap-2 text-white/60">
-                      <CalendarRange className="h-4 w-4" /> End
+                      <CalendarRange className="h-4 w-4" /> {t("endLabel")}
                     </p>
                     <p className="font-medium text-white">
                       {format(new Date(active.endDate), "PPP p")}
@@ -127,10 +129,12 @@ export default async function HomeDashboard() {
                   </div>
                   <div className="space-y-1">
                     <p className="flex items-center gap-2 text-white/60">
-                      <Sparkles className="h-4 w-4" /> Status
+                      <Sparkles className="h-4 w-4" /> {t("statusLabel")}
                     </p>
                     <p className="font-medium text-white">
-                      {countdown ? `Closing ${countdown}` : "TBA"}
+                      {countdown
+                        ? t("closingLabel", { countdown })
+                        : t("tbaLabel")}
                     </p>
                   </div>
                 </div>
@@ -142,14 +146,13 @@ export default async function HomeDashboard() {
             <div className="space-y-6">
               <div>
                 <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-                  Actions
+                  {t("actionsEyebrow")}
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold">
-                  {active ? "Ready for takeoff" : "Keep the momentum"}
+                  {active ? t("actionsTitleActive") : t("actionsTitleInactive")}
                 </h2>
                 <p className="text-sm text-white/70">
-                  Upload your photo, collect votes, and stay involved in the
-                  community.
+                  {t("actionsDescription")}
                 </p>
               </div>
 
@@ -160,7 +163,9 @@ export default async function HomeDashboard() {
                       asChild
                       className="h-12 w-full rounded-full bg-brand-gradient text-brand-on-primary text-base font-semibold hover:opacity-90"
                     >
-                      <Link href={`/challenges/${active.id}`}>View & Vote</Link>
+                      <Link href={`/challenges/${active.id}`}>
+                        {t("viewVoteCta")}
+                      </Link>
                     </Button>
                     <Button
                       asChild
@@ -168,7 +173,7 @@ export default async function HomeDashboard() {
                       className="h-12 w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
                     >
                       <Link href={`/challenges/${active.id}/upload`}>
-                        Upload your photo
+                        {t("uploadPhotoCta")}
                       </Link>
                     </Button>
                   </>
@@ -178,14 +183,14 @@ export default async function HomeDashboard() {
                       asChild
                       className="h-12 w-full rounded-full bg-brand-gradient text-brand-on-primary text-base font-semibold hover:opacity-90"
                     >
-                      <Link href="/submissions">Browse archive</Link>
+                      <Link href="/submissions">{t("browseArchiveCta")}</Link>
                     </Button>
                     <Button
                       asChild
                       variant="secondary"
                       className="h-12 w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
                     >
-                      <Link href="/leaderboard">See leaderboard</Link>
+                      <Link href="/leaderboard">{t("seeLeaderboardCta")}</Link>
                     </Button>
                   </>
                 )}
@@ -199,7 +204,7 @@ export default async function HomeDashboard() {
             <MySubmission challengeId={active.id} />
             <div className="rounded-4xl border border-nav-border/40 bg-panel/80 p-6 shadow-[0_20px_45px_rgba(2,6,23,0.65)]">
               <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-                Weekly flow
+                {t("weeklyFlowTitle")}
               </p>
               <div className="mt-4 space-y-4">
                 {weeklyRhythm.map((step) => (
@@ -228,19 +233,18 @@ export default async function HomeDashboard() {
           <div className="rounded-[28px] border border-nav-border/40 bg-panel/80 p-6">
             <div className="flex items-center justify-between">
               <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-                Leaderboard preview
+                {t("leaderboardPreviewTitle")}
               </p>
               <Link
                 href="/leaderboard"
                 className="text-sm text-white/70 transition hover:text-white"
               >
-                View all
+                {t("leaderboardViewAll")}
               </Link>
             </div>
             {leaderboardPreview.length === 0 ? (
               <p className="mt-5 text-sm text-white/70">
-                No results yet. Once this challenge has votes, the top creators
-                will appear here.
+                {t("leaderboardEmpty")}
               </p>
             ) : (
               <ul className="mt-5 space-y-4">
@@ -251,10 +255,10 @@ export default async function HomeDashboard() {
                   >
                     <span className="flex items-center gap-2 text-sm">
                       <span className="text-white/60">{index + 1}.</span>
-                      {entry.userName || "Anonymous"}
+                      {entry.userName || t("anonymousUser")}
                     </span>
                     <span className="text-sm text-white/70">
-                      {entry.voteCount} votes
+                      {t("votesLabel", { count: entry.voteCount })}
                     </span>
                   </li>
                 ))}
@@ -264,7 +268,7 @@ export default async function HomeDashboard() {
 
           <div className="rounded-[28px] border border-nav-border/40 bg-panel/80 p-6">
             <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-              Community pulse
+              {t("communityPulseTitle")}
             </p>
             <div className="mt-6 grid gap-4">
               {communityStats.map((stat) => (
@@ -283,25 +287,21 @@ export default async function HomeDashboard() {
 
           <div className="rounded-[28px] border border-nav-border/40 bg-panel/80 p-6">
             <p className="text-sm uppercase tracking-[0.4em] text-white/60">
-              Need a refresher?
+              {t("refresherTitle")}
             </p>
-            <p className="mt-4 text-white/85">
-              Use the archive to study past challenges, see how photos placed,
-              and save ideas for future submissions.
-            </p>
+            <p className="mt-4 text-white/85">{t("refresherDescription")}</p>
             <Button
               asChild
               variant="secondary"
               className="mt-6 h-12 w-full rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
             >
-              <Link href="/submissions">Open archive</Link>
+              <Link href="/submissions">{t("openArchiveCta")}</Link>
             </Button>
           </div>
         </section>
 
         <div className="rounded-[28px] border border-nav-border/30 bg-panel/70 p-6 text-sm text-white/70">
-          Tip: Only one submission per user per challenge. Vote fairly and focus
-          on supporting strong work.
+          {t("tipText")}
         </div>
       </div>
     </div>

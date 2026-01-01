@@ -10,8 +10,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Camera, Clock, Upload as UploadIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function UploadPage() {
+  const t = useTranslations("ChallengeUpload");
   const params = useParams();
   const challengeId = Array.isArray(params?.id)
     ? params.id[0]
@@ -30,7 +32,7 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!file) {
-      toast.error("Please choose an image to upload.");
+      toast.error(t("toastChooseImage"));
       return;
     }
     setLoading(true);
@@ -48,16 +50,16 @@ export default function UploadPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data?.error || "Upload failed");
+        toast.error(data?.error || t("toastUploadFailed"));
         setLoading(false);
         return;
       }
 
-      toast.success("Photo uploaded successfully!");
+      toast.success(t("toastUploadSuccess"));
       router.push("/home");
     } catch (err) {
       console.error(err);
-      toast.error("Upload error");
+      toast.error(t("toastUploadError"));
     } finally {
       setLoading(false);
     }
@@ -76,33 +78,30 @@ export default function UploadPage() {
             variant="secondary"
             className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
           >
-            Weekly upload
+            {t("badgeWeeklyUpload")}
           </Badge>
 
           <div className="mt-4 space-y-3">
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-              Share your challenge photo
+              {t("pageTitle")}
             </h1>
             <p className="text-sm text-white/70 sm:text-base">
-              One photo per creator per challenge. Add a short caption so voters
-              understand your idea.
+              {t("pageSubtitle")}
             </p>
           </div>
 
           <div className="mt-8 space-y-4">
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <UploadIcon className="h-4 w-4 text-brand-accent" />
-              JPEG/PNG • clear resolution recommended
+              {t("tipFormat")}
             </div>
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <Camera className="h-4 w-4 text-brand-accent" />
-              Use the caption to share gear, lighting, or story details if you
-              want.
+              {t("tipCaption")}
             </div>
             <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 px-4 py-3 text-sm text-white/80">
               <Clock className="h-4 w-4 text-brand-accent" />
-              Make sure you upload before the challenge ends so your photo can
-              be included in voting.
+              {t("tipDeadline")}
             </div>
           </div>
         </section>
@@ -111,18 +110,15 @@ export default function UploadPage() {
           <Card className="border-none bg-transparent text-brand-foreground shadow-none">
             <CardHeader className="space-y-2">
               <CardTitle className="text-2xl font-semibold text-white">
-                Upload photo
+                {t("cardTitle")}
               </CardTitle>
-              <p className="text-sm text-white/70">
-                Your submission will appear in the challenge gallery once the
-                upload completes.
-              </p>
+              <p className="text-sm text-white/70">{t("cardSubtitle")}</p>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">
-                    Image
+                    {t("labelImage")}
                   </label>
                   <div className="rounded-2xl border border-dashed border-white/20 bg-black/10 p-4 text-center">
                     <Input
@@ -132,32 +128,31 @@ export default function UploadPage() {
                       className="file:mr-4 file:rounded-full file:border-0 file:bg-brand-gradient file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-on-primary text-sm text-white/80"
                     />
                     {file ? (
-                      <p className="mt-2 text-xs text-white/60">{file.name}</p>
+                      <p className="mt-2 text-xs text-white/60">
+                        {t("selectedFileName", { name: file.name })}
+                      </p>
                     ) : (
                       <p className="mt-2 text-xs text-white/60">
-                        Drag & drop or click to choose a file.
+                        {t("dropzoneEmpty")}
                       </p>
                     )}
                   </div>
-                  <p className="text-xs text-white/60">
-                    One image per challenge. Recommended: JPEG or PNG with
-                    plenty of detail.
-                  </p>
+                  <p className="text-xs text-white/60">{t("helpOneImage")}</p>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-white/80">
-                    Caption (optional)
+                    {t("labelCaptionOptional")}
                   </label>
                   <Textarea
                     value={caption}
                     onChange={(e) => setCaption(e.target.value.slice(0, 20))}
                     maxLength={20}
-                    placeholder="Lighting setup, lens, story inspiration…"
+                    placeholder={t("captionPlaceholder")}
                     className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/40 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
                   />
                   <p className="text-xs text-white/60">
-                    {caption.length} / 20 characters
+                    {t("captionCount", { count: caption.length, max: 20 })}
                   </p>
                 </div>
 
@@ -169,14 +164,14 @@ export default function UploadPage() {
                     disabled={loading}
                     className="h-12 flex-1 rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10 sm:flex-none sm:px-8"
                   >
-                    Cancel
+                    {t("cancelCta")}
                   </Button>
                   <Button
                     type="submit"
                     className="h-12 flex-1 rounded-full bg-brand-gradient text-brand-on-primary text-base font-semibold hover:opacity-90 sm:flex-none sm:px-8"
                     disabled={loading}
                   >
-                    {loading ? "Uploading..." : "Upload photo"}
+                    {loading ? t("uploading") : t("uploadPhotoCta")}
                   </Button>
                 </div>
               </form>

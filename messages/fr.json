@@ -151,7 +151,8 @@
     "adminPhotos": "Photos",
     "adminLeaderboard": "Classement",
     "adminProfile": "Profil",
-    "adminSignOut": "Se déconnecter"
+    "adminSignOut": "Se déconnecter",
+    "userMenu": "Menu"
   },
   "Leaderboard": {
     "liveBadge": "Classement en direct",
@@ -175,11 +176,148 @@
     "anonymousUser": "Anonyme",
     "photoAltFallback": "Photo"
   },
+  "Profile": {
+    "badge": "Profil créateur",
+    "pageTitle": "Paramètres personnels",
+    "pageSubtitle": "Gardez votre avatar, votre nom et les détails du compte à jour pour que les gens sachent qui se cache derrière chaque photo.",
+    "roleFallback": "membre",
+    "highlightIdentityTitle": "Identité verrouillée",
+    "highlightIdentityDescription": "Rôle actuel : {role}.",
+    "highlightPortfolioTitle": "Portfolio prêt",
+    "highlightPortfolioDescription": "Les envois restent liés à ce profil pour chaque défi.",
+    "highlightCommunityTitle": "Communauté d'abord",
+    "highlightCommunityDescription": "Gardez vos informations à jour pour que l'on reconnaisse votre travail.",
+    "formBadge": "Profil",
+    "formTitle": "Votre identité de créateur",
+    "formSubtitle": "Mettez à jour votre nom, votre avatar et vérifiez les détails liés à vos soumissions.",
+    "avatarAlt": "Avatar du profil",
+    "changePhoto": "Changer la photo",
+    "fullNameLabel": "Nom complet",
+    "fullNamePlaceholder": "Votre nom",
+    "emailLabel": "E-mail",
+    "roleLabel": "Rôle",
+    "saving": "Enregistrement...",
+    "saveChanges": "Enregistrer les modifications",
+    "toastSuccess": "Profil mis à jour !",
+    "toastError": "Échec de la mise à jour du profil",
+    "validationNameMin": "Le nom doit contenir au moins 2 caractères",
+    "validationNameMax": "Le nom doit contenir au maximum 50 caractères",
+    "validationNamePattern": "Le nom ne peut contenir que des lettres, des espaces, des apostrophes et des tirets"
+  },
   "Footer": {
     "tagline": "Un espace créatif où les photographes progressent ensemble.",
     "linkHome": "Accueil",
     "linkSubmissions": "Soumissions",
     "linkLeaderboard": "Classement",
     "copyright": "© {year} PixiVerse — Conçu en Mauritanie."
+  },
+  "Home": {
+    "weeklyRhythm": {
+      "upload": {
+        "label": "Téléverser",
+        "range": "Pendant la période de soumission",
+        "description": "Soumettez une photo pour le défi en cours avec une courte légende."
+      },
+      "vote": {
+        "label": "Voter",
+        "range": "Pendant la période de vote",
+        "description": "Votez pour les autres participations sans voir qui les a publiées."
+      },
+      "celebrate": {
+        "label": "Célébrer",
+        "range": "Quand les résultats sont publiés",
+        "description": "Voyez quelles photos se sont le mieux classées et apprenez ce qui a fonctionné."
+      }
+    },
+    "activeChallengeBadge": "Défi actif",
+    "endsLabel": "Se termine {countdown}",
+    "noActiveChallengeTitle": "Aucun défi actif pour le moment",
+    "noActiveChallengeDescription": "Vous verrez le prochain défi ici dès qu’il sera en ligne.",
+    "startLabel": "Début",
+    "endLabel": "Fin",
+    "statusLabel": "Statut",
+    "closingLabel": "Clôture {countdown}",
+    "tbaLabel": "À venir",
+    "actionsEyebrow": "Actions",
+    "actionsTitleActive": "Prêt au décollage",
+    "actionsTitleInactive": "Garder l’élan",
+    "actionsDescription": "Mettez en ligne votre photo, collectez des votes et restez actif dans la communauté.",
+    "viewVoteCta": "Voir et voter",
+    "uploadPhotoCta": "Téléverser votre photo",
+    "browseArchiveCta": "Parcourir l’archive",
+    "seeLeaderboardCta": "Voir le classement",
+    "weeklyFlowTitle": "Rythme hebdomadaire",
+    "leaderboardPreviewTitle": "Aperçu du classement",
+    "leaderboardViewAll": "Tout voir",
+    "leaderboardEmpty": "Aucun résultat pour l’instant. Dès que ce défi aura des votes, les meilleurs créateurs apparaîtront ici.",
+    "anonymousUser": "Anonyme",
+    "votesLabel": "{count} votes",
+    "communityPulseTitle": "Pouls de la communauté",
+    "communityStats": {
+      "photosSubmitted": "Photos soumises",
+      "activeMembers": "Membres actifs",
+      "votesCast": "Votes exprimés"
+    },
+    "refresherTitle": "Besoin d’un rappel ?",
+    "refresherDescription": "Utilisez l’archive pour étudier les anciens défis, voir le classement des photos et garder des idées pour de futures soumissions.",
+    "openArchiveCta": "Ouvrir l'archive",
+    "tipText": "Astuce : une seule soumission par utilisateur et par défi. Votez de façon équitable et soutenez les meilleures photos."
+  },
+  "Submissions": {
+    "archiveBadge": "Archive",
+    "pageTitle": "Soumissions passées",
+    "pageSubtitle": "Parcourez les défis précédents et découvrez comment les membres ont abordé chaque thème.",
+    "emptyState": "Aucune soumission passée pour le moment. Une fois les défis terminés, leurs galeries apparaîtront ici.",
+    "challengeEyebrow": "Défi",
+    "submissionCount": "{count, plural, one {# soumission} other {# soumissions}}",
+    "submissionAlt": "Soumission",
+    "uploadedLabel": "Téléversé"
+  },
+  "ChallengeVote": {
+    "notFound": "Défi introuvable.",
+    "badgeLive": "Défi en direct",
+    "helperLine": "Votez pour une photo • votre vote aide à décider des résultats",
+    "emptyPhotos": "Aucune photo téléversée pour le moment.",
+    "photoAlt": "Photo",
+    "anonymousUser": "Anonyme",
+    "uploadedLabel": "Téléversé",
+    "votesLabel": "{count, plural, one {# vote} other {# votes}}"
+  },
+  "VoteButton": {
+    "toastUpdated": "Vote mis à jour !",
+    "toastFailed": "Échec du vote",
+    "dialogTitle": "Changer votre vote ?",
+    "dialogDescription": "Vous avez déjà voté pour une autre photo dans ce défi. Votre vote sera déplacé sur cette photo.",
+    "cancel": "Annuler",
+    "switchVote": "Changer de vote",
+    "switching": "Changement...",
+    "processing": "Traitement...",
+    "yourOwn": "Votre photo",
+    "unvote": "Retirer le vote",
+    "vote": "Voter"
+  },
+  "ChallengeUpload": {
+    "badgeWeeklyUpload": "Téléversement hebdomadaire",
+    "pageTitle": "Partagez votre photo du défi",
+    "pageSubtitle": "Une photo par créateur et par défi. Ajoutez une courte légende pour que les votants comprennent votre idée.",
+    "tipFormat": "JPEG/PNG • résolution nette recommandée",
+    "tipCaption": "Utilisez la légende pour partager le matériel, l'éclairage ou l'histoire si vous le souhaitez.",
+    "tipDeadline": "Assurez-vous de téléverser avant la fin du défi afin que votre photo soit prise en compte pour le vote.",
+    "cardTitle": "Téléverser une photo",
+    "cardSubtitle": "Votre soumission apparaîtra dans la galerie du défi une fois le téléversement terminé.",
+    "labelImage": "Image",
+    "dropzoneEmpty": "Glissez-déposez ou cliquez pour choisir un fichier.",
+    "helpOneImage": "Une image par défi. Recommandé : JPEG ou PNG avec beaucoup de détails.",
+    "labelCaptionOptional": "Légende (facultatif)",
+    "captionPlaceholder": "Éclairage, objectif, inspiration de l'histoire…",
+    "captionCount": "{count} / {max} caractères",
+    "cancelCta": "Annuler",
+    "uploading": "Téléversement...",
+    "uploadPhotoCta": "Téléverser la photo",
+    "toastChooseImage": "Veuillez choisir une image à téléverser.",
+    "toastUploadFailed": "Échec du téléversement",
+    "toastUploadSuccess": "Photo téléversée avec succès !",
+    "toastUploadError": "Erreur de téléversement",
+    "selectedFileName": "Sélectionné : {name}"
   }
 }

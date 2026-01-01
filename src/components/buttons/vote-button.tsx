@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { voteAction } from "@/app/(user)/challenges/[id]/actions";
@@ -30,6 +31,7 @@ export function VoteButton({
   isVoted,
   willSwitch,
 }: VoteButtonProps) {
+  const t = useTranslations("VoteButton");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -38,10 +40,10 @@ export function VoteButton({
     startTransition(async () => {
       try {
         await voteAction(photoId);
-        toast.success("Vote updated!");
+        toast.success(t("toastUpdated"));
         router.refresh(); // forces full re-render with new data
       } catch (err: any) {
-        toast.error(err.message || "Vote failed");
+        toast.error(err.message || t("toastFailed"));
       } finally {
         setConfirmOpen(false);
       }
@@ -69,16 +71,17 @@ export function VoteButton({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Switch your vote?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dialogTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              You already voted for another photo in this challenge. Your vote
-              will move to this photo instead.
+              {t("dialogDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPending}>
+              {t("cancel")}
+            </AlertDialogCancel>
             <AlertDialogAction disabled={isPending} onClick={executeVote}>
-              {isPending ? "Switching..." : "Switch vote"}
+              {isPending ? t("switching") : t("switchVote")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -99,12 +102,12 @@ export function VoteButton({
   `}
       >
         {isPending
-          ? "Processing..."
+          ? t("processing")
           : disabled
-          ? "your own"
+          ? t("yourOwn")
           : isVoted
-          ? "Unvote"
-          : "Vote"}
+          ? t("unvote")
+          : t("vote")}
       </Button>
     </>
   );

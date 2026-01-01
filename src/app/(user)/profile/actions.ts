@@ -36,7 +36,7 @@ export async function updateProfile(formData: FormData): Promise<void> {
       throw new Error("Name must be between 2 and 50 characters");
     }
 
-    const namePattern = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+    const namePattern = /^[\p{L}\s'-]+$/u;
     if (!namePattern.test(name)) {
       throw new Error(
         "Name can only contain letters, spaces, apostrophes, and hyphens"

@@ -1,13 +1,21 @@
+// src\components\navigation\navbar-public.tsx
 "use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LayoutGrid, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "@/components/navigation/language-switcher";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export function NavbarPublic() {
   const t = useTranslations("Navigation");
@@ -27,6 +35,10 @@ export function NavbarPublic() {
   };
 
   const isActive = (href: string) => pathname === href;
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-nav-border/50 bg-nav-surface/80 text-brand-foreground backdrop-blur-xl">
@@ -87,38 +99,55 @@ export function NavbarPublic() {
           </Button>
         </div>
 
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-full border border-white/20 p-2 text-white md:hidden"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.2 }}
-            className="grid gap-4 border-t border-nav-border/40 bg-nav-surface/95 px-4 pb-6 pt-4 text-white/90 backdrop-blur-xl md:hidden"
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="md:hidden rounded-full border border-white/20 bg-white/5 text-white transition-transform hover:bg-white/10 active:scale-[0.98]"
+              aria-label="Toggle menu"
+            >
+              <LayoutGrid size={20} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="top"
+            className="md:hidden max-h-[100dvh] overflow-y-auto border-b border-nav-border/40 bg-nav-surface/95 px-4 pb-6 pt-16 text-white/90 backdrop-blur-xl [&_[data-slot=sheet-close-default]]:hidden"
           >
-            {marketingLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNavigate(link.href)}
-                className={`text-left text-base font-medium ${
-                  isActive(link.href) ? "text-white" : "text-white/70"
-                }`}
-              >
-                {link.name}
-              </button>
-            ))}
+            <SheetHeader className="sr-only">
+              <SheetTitle>{t("publicAbout")}</SheetTitle>
+            </SheetHeader>
+            <div className="flex items-center justify-end">
+              <SheetClose asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 rounded-full border border-white/20 text-white hover:bg-white/10"
+                  aria-label="Close menu"
+                >
+                  <X size={18} />
+                </Button>
+              </SheetClose>
+            </div>
 
-            <div className="mt-2 grid gap-3">
+            <div className="mt-4 grid gap-4">
+              {marketingLinks.map((link) => (
+                <button
+                  key={link.href}
+                  type="button"
+                  onClick={() => handleNavigate(link.href)}
+                  className={`text-left text-base font-medium ${
+                    isActive(link.href) ? "text-white" : "text-white/70"
+                  }`}
+                >
+                  {link.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-3">
               <div className="flex items-center">
                 <LanguageSwitcher variant="full" />
               </div>
@@ -136,9 +165,9 @@ export function NavbarPublic() {
                 {t("publicJoin")}
               </Button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }

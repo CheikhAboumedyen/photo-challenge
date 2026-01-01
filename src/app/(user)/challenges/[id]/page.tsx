@@ -7,15 +7,23 @@ import { getPhotosWithVotes } from "./actions";
 import { VoteButton } from "@/components/buttons/vote-button";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
+import { enUS, fr } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles } from "lucide-react";
+import { getTranslations, getLocale } from "next-intl/server";
 
 export default async function ChallengeVotePage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations("ChallengeVote");
+  const locale = await getLocale();
+
+  const dateLocale = locale === "fr" ? fr : enUS;
+
   const { id: challengeId } = await params;
+
   const session = await auth.api.getSession({ headers: await headers() });
   const userId = session?.user?.id;
 
@@ -25,7 +33,7 @@ export default async function ChallengeVotePage({
   if (!challenge)
     return (
       <div className="min-h-screen bg-page px-6 py-24 text-center text-brand-foreground">
-        Challenge not found.
+        {t("notFound")}
       </div>
     );
 
@@ -60,7 +68,7 @@ export default async function ChallengeVotePage({
             variant="secondary"
             className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
           >
-            Live challenge
+            {t("badgeLive")}
           </Badge>
           <div className="mt-4 space-y-3">
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">
@@ -74,13 +82,13 @@ export default async function ChallengeVotePage({
           </div>
           <p className="mt-6 flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-white/60">
             <Sparkles className="h-4 w-4 text-brand-accent" />
-            Vote for one photo • your vote helps decide the results
+            {t("helperLine")}
           </p>
         </section>
 
         {photos.length === 0 ? (
           <div className="rounded-4xl border border-nav-border/40 bg-panel/70 p-10 text-center text-white/70">
-            No photos uploaded yet.
+            {t("emptyPhotos")}
           </div>
         ) : (
           <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -97,7 +105,7 @@ export default async function ChallengeVotePage({
                   <div className="relative h-64 w-full">
                     <Image
                       src={p.imageUrl}
-                      alt={p.caption || "Photo"}
+                      alt={p.caption || t("photoAlt")}
                       fill
                       className="object-cover"
                     />
@@ -106,12 +114,13 @@ export default async function ChallengeVotePage({
                   <div className="flex flex-1 flex-col gap-4 p-5 text-white">
                     <div className="space-y-1 text-sm">
                       <p className="text-base font-semibold">
-                        {p.userName || "Anonymous"}
+                        {p.userName || t("anonymousUser")}
                       </p>
                       <p className="text-xs text-white/70">
-                        Uploaded{" "}
+                        {t("uploadedLabel")}{" "}
                         {formatDistanceToNow(new Date(p.createdAt), {
                           addSuffix: true,
+                          locale: dateLocale,
                         })}
                       </p>
                       {p.caption && (
@@ -129,7 +138,7 @@ export default async function ChallengeVotePage({
                         willSwitch={hasExistingVote && !isVoted}
                       />
                       <p className="text-xs text-white/60">
-                        {p.voteCount} vote{p.voteCount === 1 ? "" : "s"}
+                        {t("votesLabel", { count: p.voteCount })}
                       </p>
                     </div>
                   </div>

@@ -1,4 +1,4 @@
-{
+﻿{
   "Common": {
     "appName": "PixiVerse"
   },
@@ -119,10 +119,10 @@
     "highlightVotingTitle": "Community voting",
     "highlightVotingDesc": "Blind voting helps surface strong photos fairly and keeps things fun.",
     "timelineTitle": "Weekly rhythm",
-    "timelineSubtitle": "Everyone follows the same simple loop�?�submit, vote, learn, repeat.",
+    "timelineSubtitle": "Everyone follows the same simple loopï¿½?ï¿½submit, vote, learn, repeat.",
     "timelineSubmitTitle": "Submit",
     "timelineSubmitRange": "During the entry window",
-    "timelineSubmitCopy": "Upload one photo for the current challenge�?�quality over quantity.",
+    "timelineSubmitCopy": "Upload one photo for the current challengeï¿½?ï¿½quality over quantity.",
     "timelineVoteTitle": "Vote",
     "timelineVoteRange": "While voting is open",
     "timelineVoteCopy": "Cast your vote on other entries without seeing the owner first.",
@@ -151,7 +151,8 @@
     "adminPhotos": "Photos",
     "adminLeaderboard": "Leaderboard",
     "adminProfile": "Profile",
-    "adminSignOut": "Sign out"
+    "adminSignOut": "Sign out",
+    "userMenu": "Menu"
   },
   "Leaderboard": {
     "liveBadge": "Live leaderboard",
@@ -175,11 +176,148 @@
     "anonymousUser": "Anonymous",
     "photoAltFallback": "Photo"
   },
+  "Profile": {
+    "badge": "Creator profile",
+    "pageTitle": "Personal settings",
+    "pageSubtitle": "Keep your avatar, name, and account details up to date so people know who's behind each photo.",
+    "roleFallback": "member",
+    "highlightIdentityTitle": "Identity locked in",
+    "highlightIdentityDescription": "Current role: {role}.",
+    "highlightPortfolioTitle": "Portfolio ready",
+    "highlightPortfolioDescription": "Uploads stay tied to this profile across every challenge.",
+    "highlightCommunityTitle": "Community first",
+    "highlightCommunityDescription": "Keep your details up to date so people recognize your work.",
+    "formBadge": "Profile",
+    "formTitle": "Your creator identity",
+    "formSubtitle": "Update your name, avatar, and review the details tied to your submissions.",
+    "avatarAlt": "Profile avatar",
+    "changePhoto": "Change photo",
+    "fullNameLabel": "Full name",
+    "fullNamePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "roleLabel": "Role",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "toastSuccess": "Profile updated!",
+    "toastError": "Failed to update profile",
+    "validationNameMin": "Name must be at least 2 characters",
+    "validationNameMax": "Name must be at most 50 characters",
+    "validationNamePattern": "Name can only contain letters, spaces, apostrophes, and hyphens"
+  },
   "Footer": {
     "tagline": "A creative space where photographers grow together.",
     "linkHome": "Home",
     "linkSubmissions": "Submissions",
     "linkLeaderboard": "Leaderboard",
     "copyright": "© {year} PixiVerse — Made in Mauritania."
+  },
+  "Home": {
+    "weeklyRhythm": {
+      "upload": {
+        "label": "Upload",
+        "range": "While entries are open",
+        "description": "Submit one photo for the current challenge with a short caption."
+      },
+      "vote": {
+        "label": "Vote",
+        "range": "While voting is open",
+        "description": "Vote on other entries without seeing who posted them."
+      },
+      "celebrate": {
+        "label": "Celebrate",
+        "range": "When results are published",
+        "description": "See which photos ranked highest and learn from what worked."
+      }
+    },
+    "activeChallengeBadge": "Active challenge",
+    "endsLabel": "Ends {countdown}",
+    "noActiveChallengeTitle": "No active challenge right now",
+    "noActiveChallengeDescription": "You'll see the next challenge here as soon as it goes live.",
+    "startLabel": "Start",
+    "endLabel": "End",
+    "statusLabel": "Status",
+    "closingLabel": "Closing {countdown}",
+    "tbaLabel": "TBA",
+    "actionsEyebrow": "Actions",
+    "actionsTitleActive": "Ready for takeoff",
+    "actionsTitleInactive": "Keep the momentum",
+    "actionsDescription": "Upload your photo, collect votes, and stay involved in the community.",
+    "viewVoteCta": "View & Vote",
+    "uploadPhotoCta": "Upload your photo",
+    "browseArchiveCta": "Browse archive",
+    "seeLeaderboardCta": "See leaderboard",
+    "weeklyFlowTitle": "Weekly flow",
+    "leaderboardPreviewTitle": "Leaderboard preview",
+    "leaderboardViewAll": "View all",
+    "leaderboardEmpty": "No results yet. Once this challenge has votes, the top creators will appear here.",
+    "anonymousUser": "Anonymous",
+    "votesLabel": "{count} votes",
+    "communityPulseTitle": "Community pulse",
+    "communityStats": {
+      "photosSubmitted": "Photos submitted",
+      "activeMembers": "Active members",
+      "votesCast": "Votes cast"
+    },
+    "refresherTitle": "Need a refresher?",
+    "refresherDescription": "Use the archive to study past challenges, see how photos placed, and save ideas for future submissions.",
+    "openArchiveCta": "Open archive",
+    "tipText": "Tip: Only one submission per user per challenge. Vote fairly and focus on supporting strong work."
+  },
+  "Submissions": {
+    "archiveBadge": "Archive",
+    "pageTitle": "Past submissions",
+    "pageSubtitle": "Browse previous challenges and see how members approached each theme.",
+    "emptyState": "No past submissions yet. Once challenges conclude, their galleries will appear here.",
+    "challengeEyebrow": "Challenge",
+    "submissionCount": "{count, plural, one {# submission} other {# submissions}}",
+    "submissionAlt": "Submission",
+    "uploadedLabel": "Uploaded"
+  },
+  "ChallengeVote": {
+    "notFound": "Challenge not found.",
+    "badgeLive": "Live challenge",
+    "helperLine": "Vote for one photo • your vote helps decide the results",
+    "emptyPhotos": "No photos uploaded yet.",
+    "photoAlt": "Photo",
+    "anonymousUser": "Anonymous",
+    "uploadedLabel": "Uploaded",
+    "votesLabel": "{count, plural, one {# vote} other {# votes}}"
+  },
+  "VoteButton": {
+    "toastUpdated": "Vote updated!",
+    "toastFailed": "Vote failed",
+    "dialogTitle": "Switch your vote?",
+    "dialogDescription": "You already voted for another photo in this challenge. Your vote will move to this photo instead.",
+    "cancel": "Cancel",
+    "switchVote": "Switch vote",
+    "switching": "Switching...",
+    "processing": "Processing...",
+    "yourOwn": "your own",
+    "unvote": "Unvote",
+    "vote": "Vote"
+  },
+  "ChallengeUpload": {
+    "badgeWeeklyUpload": "Weekly upload",
+    "pageTitle": "Share your challenge photo",
+    "pageSubtitle": "One photo per creator per challenge. Add a short caption so voters understand your idea.",
+    "tipFormat": "JPEG/PNG • clear resolution recommended",
+    "tipCaption": "Use the caption to share gear, lighting, or story details if you want.",
+    "tipDeadline": "Make sure you upload before the challenge ends so your photo can be included in voting.",
+    "cardTitle": "Upload photo",
+    "cardSubtitle": "Your submission will appear in the challenge gallery once the upload completes.",
+    "labelImage": "Image",
+    "dropzoneEmpty": "Drag & drop or click to choose a file.",
+    "helpOneImage": "One image per challenge. Recommended: JPEG or PNG with plenty of detail.",
+    "labelCaptionOptional": "Caption (optional)",
+    "captionPlaceholder": "Lighting setup, lens, story inspiration…",
+    "captionCount": "{count} / {max} characters",
+    "cancelCta": "Cancel",
+    "uploading": "Uploading...",
+    "uploadPhotoCta": "Upload photo",
+    "toastChooseImage": "Please choose an image to upload.",
+    "toastUploadFailed": "Upload failed",
+    "toastUploadSuccess": "Photo uploaded successfully!",
+    "toastUploadError": "Upload error",
+    "selectedFileName": "Selected : {name}"
   }
 }

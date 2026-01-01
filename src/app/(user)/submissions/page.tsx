@@ -1,10 +1,12 @@
 // src\app\(user)\submissions\page.tsx
 import Image from "next/image";
 import { format } from "date-fns";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getPastChallengeSubmissions } from "./actions";
 import { Badge } from "@/components/ui/badge";
 
 export default async function SubmissionsPage() {
+  const t = await getTranslations("Submissions");
   const challengeGroups = await getPastChallengeSubmissions();
 
   return (
@@ -14,23 +16,21 @@ export default async function SubmissionsPage() {
           variant="secondary"
           className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
         >
-          Archive
+          {t("archiveBadge")}
         </Badge>
         <div className="mt-4 space-y-3">
           <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-            Past submissions
+            {t("pageTitle")}
           </h1>
           <p className="text-sm text-white/70 sm:text-base">
-            Browse previous challenges and see how members approached each
-            theme.
+            {t("pageSubtitle")}
           </p>
         </div>
       </section>
 
       {challengeGroups.length === 0 ? (
         <div className="rounded-4xl border border-nav-border/40 bg-panel/80 p-10 text-center text-white/70 shadow-[0_20px_45px_rgba(2,6,23,0.6)]">
-          No past submissions yet. Once challenges conclude, their galleries
-          will appear here.
+          {t("emptyState")}
         </div>
       ) : (
         challengeGroups.map((group) => (
@@ -41,7 +41,7 @@ export default async function SubmissionsPage() {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Challenge
+                  {t("challengeEyebrow")}
                 </p>
                 <h2 className="text-2xl font-semibold text-white">
                   {group.challenge.title}
@@ -57,8 +57,7 @@ export default async function SubmissionsPage() {
                 )}
               </div>
               <Badge className="w-fit rounded-full border border-white/20 bg-transparent text-xs text-white/70">
-                {group.photos.length} submission
-                {group.photos.length > 1 ? "s" : ""}
+                {t("submissionCount", { count: group.photos.length })}
               </Badge>
             </div>
 
@@ -71,7 +70,7 @@ export default async function SubmissionsPage() {
                   <div className="relative h-60 w-full">
                     <Image
                       src={photo.imageUrl}
-                      alt={photo.caption || "Submission"}
+                      alt={photo.caption || t("submissionAlt")}
                       fill
                       className="object-cover"
                     />
@@ -82,7 +81,7 @@ export default async function SubmissionsPage() {
                         {photo.userName}
                       </p>
                       <p className="text-xs text-white/60">
-                        Uploaded{" "}
+                        {t("uploadedLabel")}{" "}
                         {format(new Date(photo.createdAt), "MMM dd, yyyy")}
                       </p>
                       {photo.caption && (
