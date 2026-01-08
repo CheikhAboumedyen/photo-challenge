@@ -18,9 +18,9 @@ export function SignupScreen() {
   ];
 
   return (
-    <div className="relative isolate min-h-screen bg-page text-brand-foreground">
+    <div className="relative isolate min-h-screen overflow-x-hidden bg-page text-brand-foreground">
       <div className="pointer-events-none absolute inset-0 opacity-40">
-        <div className="absolute right-[-10%] top-10 h-80 w-80 rounded-full bg-brand-gradient blur-[200px]" />
+        <div className="absolute right-0 top-10 h-80 w-80 rounded-full bg-brand-gradient blur-[200px]" />
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-12 px-4 py-16 lg:flex-row lg:items-stretch lg:gap-20 lg:px-8">

@@ -99,7 +99,8 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
 
   const getSendButtonLabel = () => {
     if (isSending) return t("resendCodeSending");
-    if (cooldownSeconds > 0) return t("resendCodeCooldown", { seconds: cooldownSeconds });
+    if (cooldownSeconds > 0)
+      return t("resendCodeCooldown", { seconds: cooldownSeconds });
     if (hasSent) return t("resendCodeButton");
     return t("verifyEmailSendCode");
   };
@@ -107,7 +108,9 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
   return (
     <Card className="w-full overflow-hidden border border-nav-border/50 bg-panel/90 text-brand-foreground shadow-[0_25px_60px_rgba(2,6,23,0.75)]">
       <CardHeader className="space-y-3 text-center">
-        <CardTitle className="text-3xl font-semibold">{t("verifyEmailHeading")}</CardTitle>
+        <CardTitle className="text-3xl font-semibold">
+          {t("verifyEmailHeading")}
+        </CardTitle>
         <CardDescription className="text-sm text-muted">
           {t("verifyEmailDescription", { email })}
         </CardDescription>
@@ -166,8 +169,3 @@ export function VerifyEmailForm({ email }: VerifyEmailFormProps) {
     </Card>
   );
 }
-
-// OTP flow notes:
-// - On mount, handleSendCode auto-runs and issues a fresh OTP; clicking "Send/Resend" generates another code. Only the latest code is valid, so pasting an earlier one can fail.
-// - Because email comes from props, if a user reached here with a different email than the one that received the OTP (e.g., stale query or different session), verification will fail with "Invalid OTP". Normalizing email for send/verify reduces mismatch risk.
-// - Rapid resend + verify attempts can overlap: a user might copy an OTP from the console that was issued before the most recent resend, leading to intermittent failures.

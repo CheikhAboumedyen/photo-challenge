@@ -8,8 +8,10 @@ import { auth } from "@/lib/auth/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { enUS, fr } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { CalendarRange, Sparkles } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
 
 async function getActiveChallenge() {
   const now = new Date();
@@ -36,6 +38,9 @@ export default async function AdminDashboardPage() {
     redirect("/home");
   }
 
+  const t = await getTranslations("AdminDashboard");
+  const locale = await getLocale();
+  const dateLocale = locale === "fr" ? fr : enUS;
   const activeChallenge = await getActiveChallenge();
 
   return (
@@ -47,15 +52,14 @@ export default async function AdminDashboardPage() {
               variant="secondary"
               className="w-fit rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
             >
-              Admin dashboard
+              {t("badgeTitle")}
             </Badge>
             <div>
               <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-                Current challenge overview
+                {t("pageTitle")}
               </h1>
               <p className="text-sm text-white/70 sm:text-base">
-                See what’s running now, adjust dates, or create the next
-                challenge.
+                {t("pageSubtitle")}
               </p>
             </div>
           </div>
@@ -66,13 +70,13 @@ export default async function AdminDashboardPage() {
               variant="secondary"
               className="h-12 rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
             >
-              <Link href="/admin/challenges">All challenges</Link>
+              <Link href="/admin/challenges">{t("allChallengesCta")}</Link>
             </Button>
             <Button
               asChild
               className="h-12 rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary hover:opacity-90"
             >
-              <Link href="/admin/challenges/new">New challenge</Link>
+              <Link href="/admin/challenges/new">{t("newChallengeCta")}</Link>
             </Button>
           </div>
         </div>
@@ -82,12 +86,9 @@ export default async function AdminDashboardPage() {
         <CardHeader className="space-y-2">
           <CardTitle className="flex items-center gap-2 text-2xl font-semibold text-white">
             <Sparkles className="h-5 w-5 text-brand-accent" />
-            Active challenge
+            {t("activeChallengeTitle")}
           </CardTitle>
-          <p className="text-sm text-white/70">
-            Only one challenge can be live at a time. Make sure the schedule
-            stays clear for everyone.
-          </p>
+          <p className="text-sm text-white/70">{t("activeChallengeNote")}</p>
         </CardHeader>
         <CardContent>
           {activeChallenge ? (
@@ -107,19 +108,23 @@ export default async function AdminDashboardPage() {
                 <div className="space-y-1">
                   <p className="flex items-center gap-2 text-white/60">
                     <CalendarRange className="h-4 w-4 text-brand-accent" />
-                    Start
+                    {t("startLabel")}
                   </p>
                   <p className="font-medium">
-                    {format(activeChallenge.startDate, "PPP p")}
+                    {format(activeChallenge.startDate, "PPP p", {
+                      locale: dateLocale,
+                    })}
                   </p>
                 </div>
                 <div className="space-y-1">
                   <p className="flex items-center gap-2 text-white/60">
                     <CalendarRange className="h-4 w-4 text-brand-accent" />
-                    End
+                    {t("endLabel")}
                   </p>
                   <p className="font-medium">
-                    {format(activeChallenge.endDate, "PPP p")}
+                    {format(activeChallenge.endDate, "PPP p", {
+                      locale: dateLocale,
+                    })}
                   </p>
                 </div>
               </div>
@@ -130,7 +135,7 @@ export default async function AdminDashboardPage() {
                   className="h-12 rounded-full bg-brand-gradient text-brand-on-primary text-base font-semibold hover:opacity-90"
                 >
                   <Link href={`/admin/challenges/${activeChallenge.id}/edit`}>
-                    Edit challenge
+                    {t("editChallengeCta")}
                   </Link>
                 </Button>
               </div>
@@ -138,16 +143,18 @@ export default async function AdminDashboardPage() {
           ) : (
             <div className="rounded-2xl border border-dashed border-white/20 p-10 text-center text-white/70">
               <p className="text-lg font-semibold text-white">
-                No active challenge
+                {t("noActiveChallengeTitle")}
               </p>
               <p className="mt-2 text-sm text-white/60">
-                Schedule the next challenge to keep the community engaged.
+                {t("noActiveChallengeDescription")}
               </p>
               <Button
                 asChild
                 className="mt-6 h-12 rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary hover:opacity-90"
               >
-                <Link href="/admin/challenges/new">Create challenge</Link>
+                <Link href="/admin/challenges/new">
+                  {t("createChallengeCta")}
+                </Link>
               </Button>
             </div>
           )}

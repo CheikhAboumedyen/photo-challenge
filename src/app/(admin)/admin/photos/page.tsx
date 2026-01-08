@@ -8,6 +8,7 @@ import {
   deletePhoto,
 } from "./actions";
 import { formatDistanceToNow } from "date-fns";
+import { enUS, fr } from "date-fns/locale";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,11 +25,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { EyeOff, Eye } from "lucide-react";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function AdminPhotosPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user || session.user.role !== "admin") redirect("/");
 
+  const t = await getTranslations("AdminPhotos");
+  const locale = await getLocale();
+  const dateLocale = locale === "fr" ? fr : enUS;
   const groups = await getAllPhotosGroupedByChallenge();
 
   if (!groups.length)
@@ -39,15 +44,12 @@ export default async function AdminPhotosPage() {
             variant="secondary"
             className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
           >
-            Photo moderation
+            {t("pageBadge")}
           </Badge>
           <p className="mt-4 text-2xl font-semibold text-white">
-            No submissions to review yet
+            {t("emptyTitle")}
           </p>
-          <p className="mt-2 text-sm text-white/70">
-            Once participants upload photos for an active challenge, they’ll
-            appear here for review.
-          </p>
+          <p className="mt-2 text-sm text-white/70">{t("emptyDescription")}</p>
         </div>
       </div>
     );
@@ -65,16 +67,13 @@ export default async function AdminPhotosPage() {
             variant="secondary"
             className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
           >
-            Photo moderation
+            {t("pageBadge")}
           </Badge>
           <div className="mt-4 space-y-2">
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-              Review and moderate submissions
+              {t("pageTitle")}
             </h1>
-            <p className="text-sm text-white/70">
-              Hide entries that shouldn’t appear publicly or delete photos that
-              break your guidelines. Photos are grouped by challenge.
-            </p>
+            <p className="text-sm text-white/70">{t("pageSubtitle")}</p>
           </div>
         </section>
 
@@ -86,13 +85,13 @@ export default async function AdminPhotosPage() {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.4em] text-white/60">
-                  Challenge
+                  {t("groupLabel")}
                 </p>
                 <h2 className="text-2xl font-semibold text-white">
                   {g.challengeTitle}
                 </h2>
                 <p className="text-sm text-white/70">
-                  {g.photos.length} photo{g.photos.length > 1 ? "s" : ""}
+                  {t("photoCount", { count: g.photos.length })}
                 </p>
               </div>
             </div>
@@ -106,7 +105,7 @@ export default async function AdminPhotosPage() {
                   <div className="relative h-60 w-full">
                     <Image
                       src={p.imageUrl}
-                      alt={p.caption ?? "Challenge photo"}
+                      alt={p.caption ?? t("photoAlt")}
                       fill
                       className={`object-cover ${
                         p.isHidden ? "opacity-40 grayscale" : ""
@@ -116,7 +115,7 @@ export default async function AdminPhotosPage() {
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span className="flex items-center gap-2 rounded-full border border-white/30 bg-black/70 px-4 py-2 text-xs uppercase tracking-[0.3em] text-white/70">
                           <EyeOff className="h-4 w-4" />
-                          Hidden
+                          {t("hiddenLabel")}
                         </span>
                       </div>
                     )}
@@ -125,12 +124,13 @@ export default async function AdminPhotosPage() {
                   <CardContent className="flex flex-1 flex-col justify-between p-5 text-sm">
                     <div className="space-y-2">
                       <p className="text-base font-semibold">
-                        {p.userName || "Anonymous"}
+                        {p.userName || t("anonymousUser")}
                       </p>
                       <p className="text-xs text-white/60">
-                        Uploaded{" "}
+                        {t("uploadedLabel")}{" "}
                         {formatDistanceToNow(new Date(p.createdAt), {
                           addSuffix: true,
+                          locale: dateLocale,
                         })}
                       </p>
                       {p.caption && (
@@ -141,7 +141,7 @@ export default async function AdminPhotosPage() {
                     </div>
 
                     <div className="mt-4 flex items-center justify-between text-xs text-white/60">
-                      <span>{p.voteCount} votes</span>
+                      <span>{t("votesLabel", { count: p.voteCount })}</span>
                       <div className="flex items-center gap-2">
                         <form action={toggleHide}>
                           <input type="hidden" name="photoId" value={p.id} />
@@ -153,12 +153,12 @@ export default async function AdminPhotosPage() {
                             {p.isHidden ? (
                               <>
                                 <Eye className="mr-1 h-3.5 w-3.5" />
-                                Show
+                                {t("showCta")}
                               </>
                             ) : (
                               <>
                                 <EyeOff className="mr-1 h-3.5 w-3.5" />
-                                Hide
+                                {t("hideCta")}
                               </>
                             )}
                           </Button>
@@ -170,22 +170,21 @@ export default async function AdminPhotosPage() {
                               variant="outline"
                               className="rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10"
                             >
-                              Delete
+                              {t("deleteCta")}
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Delete this photo?
+                                {t("deleteTitle")}
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                This will remove the photo and all of its votes.
-                                This action cannot be undone.
+                                {t("deleteDescription")}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel className="hover:bg-gray-800">
-                                Cancel
+                                {t("cancelCta")}
                               </AlertDialogCancel>
                               <form action={deletePhoto}>
                                 <input
@@ -200,7 +199,7 @@ export default async function AdminPhotosPage() {
                                     variant="destructive"
                                     className="bg-red-500 text-white hover:bg-red-400"
                                   >
-                                    Confirm delete
+                                    {t("confirmDeleteCta")}
                                   </Button>
                                 </AlertDialogAction>
                               </form>

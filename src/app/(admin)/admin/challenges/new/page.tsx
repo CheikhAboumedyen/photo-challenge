@@ -12,8 +12,10 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function NewChallengePage() {
+  const t = useTranslations("AdminChallengeNew");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -35,18 +37,18 @@ export default function NewChallengePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.startDate || !formData.endDate) {
-      toast.error("Please fill in all required fields.");
+      toast.error(t("toastMissingRequired"));
       return;
     }
 
     startTransition(async () => {
       try {
         await createChallenge(formData);
-        toast.success("Challenge created successfully!");
+        toast.success(t("toastCreatedSuccess"));
         router.push("/admin/challenges");
       } catch (err) {
         console.error(err);
-        toast.error("Failed to create challenge.");
+        toast.error(t("toastCreatedError"));
       }
     });
   };
@@ -58,15 +60,14 @@ export default function NewChallengePage() {
           variant="secondary"
           className="rounded-full border border-white/10 bg-white/10 px-4 py-1 text-white/80"
         >
-          Admin tools
+          {t("badgeAdminTools")}
         </Badge>
         <div className="mt-4 space-y-3">
           <h1 className="text-3xl font-semibold text-white sm:text-4xl">
-            Launch a new challenge
+            {t("pageTitle")}
           </h1>
           <p className="text-sm text-white/70 sm:text-base">
-            Set the theme, description, and schedule so the community knows what
-            to submit next.
+            {t("pageSubtitle")}
           </p>
         </div>
       </section>
@@ -75,38 +76,36 @@ export default function NewChallengePage() {
         <CardHeader className="space-y-2">
           <CardTitle className="flex items-center gap-2 text-2xl font-semibold text-white">
             <Plus className="h-5 w-5 text-brand-accent" />
-            New challenge
+            {t("cardTitle")}
           </CardTitle>
-          <p className="text-sm text-white/70">
-            Titles, descriptions, and dates can be adjusted later if needed.
-          </p>
+          <p className="text-sm text-white/70">{t("cardSubtitle")}</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="title" className="text-white/80">
-                Title
+                {t("labelTitle")}
               </Label>
               <Input
                 id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                placeholder="Enter challenge title"
+                placeholder={t("placeholderTitle")}
                 className="h-12 border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description" className="text-white/80">
-                Description
+                {t("labelDescription")}
               </Label>
               <Textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Briefly describe the challenge"
+                placeholder={t("placeholderDescription")}
                 maxLength={50}
                 className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
@@ -118,7 +117,7 @@ export default function NewChallengePage() {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="startDate" className="text-white/80">
-                  Start date
+                  {t("labelStartDate")}
                 </Label>
                 <Input
                   id="startDate"
@@ -132,7 +131,7 @@ export default function NewChallengePage() {
 
               <div className="space-y-2">
                 <Label htmlFor="endDate" className="text-white/80">
-                  End date
+                  {t("labelEndDate")}
                 </Label>
                 <Input
                   id="endDate"
@@ -153,14 +152,14 @@ export default function NewChallengePage() {
                 disabled={isPending}
                 className="h-12 rounded-full border border-white/20 bg-transparent text-white hover:bg-white/10"
               >
-                Cancel
+                {t("cancelCta")}
               </Button>
               <Button
                 type="submit"
                 disabled={isPending}
                 className="h-12 rounded-full bg-brand-gradient text-base font-semibold text-brand-on-primary hover:opacity-90"
               >
-                {isPending ? "Creating..." : "Create challenge"}
+                {isPending ? t("creating") : t("createCta")}
               </Button>
             </div>
           </form>
