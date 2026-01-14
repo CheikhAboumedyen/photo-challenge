@@ -97,11 +97,13 @@ export async function updateChallenge(
 
 // Delete a challenge by ID
 
-export async function deleteChallenge(id: string) {
+export async function deleteChallenge(formData: FormData) {
   try {
+    const id = formData.get("challengeId") as string;
+    if (!id) throw new Error("Missing challengeId");
+
     await db.delete(schema.challenge).where(eq(schema.challenge.id, id));
     revalidatePath("/admin/challenges");
-    return { success: true };
   } catch (error) {
     console.error("Error deleting challenge:", error);
     throw new Error("Failed to delete challenge");

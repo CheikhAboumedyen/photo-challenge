@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { revalidatePath } from "next/cache";
 import { Calendar, Plus, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
@@ -126,35 +125,35 @@ export default async function AdminChallengesPage() {
                     >
                       {t("editCta")}
                     </Link>
-                    <form
-                      action={async () => {
-                        "use server";
-                        await deleteChallenge(ch.id);
-                      }}
-                    >
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                          >
-                            {t("deleteCta")}
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              {t("deleteTitle")}
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {t("deleteDescription")}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>
-                              {t("cancelCta")}
-                            </AlertDialogCancel>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        >
+                          {t("deleteCta")}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            {t("deleteTitle")}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {t("deleteDescription")}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>
+                            {t("cancelCta")}
+                          </AlertDialogCancel>
+                          <form action={deleteChallenge}>
+                            <input
+                              type="hidden"
+                              name="challengeId"
+                              value={ch.id}
+                            />
                             <AlertDialogAction asChild>
                               <Button
                                 type="submit"
@@ -164,10 +163,10 @@ export default async function AdminChallengesPage() {
                                 {t("confirmDeleteCta")}
                               </Button>
                             </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </form>
+                          </form>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </CardContent>
                 </Card>
               );
