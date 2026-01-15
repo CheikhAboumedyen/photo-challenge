@@ -20,6 +20,37 @@ export const metadata: Metadata = {
   title: "PixiVerse",
   description:
     "Weekly portrait challenges built on Next.js, Drizzle, and BetterAuth.",
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png" },
+      { url: "/logo.png", type: "image/png", sizes: "32x32" },
+      { url: "/logo.png", type: "image/png", sizes: "16x16" },
+    ],
+    apple: [{ url: "/logo.png", type: "image/png", sizes: "180x180" }],
+    shortcut: "/logo.png",
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "PixiVerse",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "PixiVerse",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "PixiVerse Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/logo.png"],
+  },
 };
 
 export default async function RootLayout({

@@ -12,17 +12,7 @@ import { enUS, fr } from "date-fns/locale";
 import { redirect } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Badge } from "@/components/ui/badge";
 import { EyeOff, Eye } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -163,8 +153,8 @@ export default async function AdminPhotosPage() {
                             )}
                           </Button>
                         </form>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
+                        <ConfirmDialog
+                          trigger={
                             <Button
                               size="sm"
                               variant="outline"
@@ -172,40 +162,15 @@ export default async function AdminPhotosPage() {
                             >
                               {t("deleteCta")}
                             </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                {t("deleteTitle")}
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {t("deleteDescription")}
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="hover:bg-gray-800">
-                                {t("cancelCta")}
-                              </AlertDialogCancel>
-                              <form action={deletePhoto}>
-                                <input
-                                  type="hidden"
-                                  name="photoId"
-                                  value={p.id}
-                                />
-                                <AlertDialogAction asChild>
-                                  <Button
-                                    type="submit"
-                                    size="sm"
-                                    variant="destructive"
-                                    className="bg-red-500 text-white hover:bg-red-400"
-                                  >
-                                    {t("confirmDeleteCta")}
-                                  </Button>
-                                </AlertDialogAction>
-                              </form>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                          }
+                          title={t("deleteTitle")}
+                          description={t("deleteDescription")}
+                          cancelLabel={t("cancelCta")}
+                          confirmLabel={t("confirmDeleteCta")}
+                          formAction={deletePhoto}
+                          hiddenInputs={[{ name: "photoId", value: p.id }]}
+                          confirmButtonSize="sm"
+                        />
                       </div>
                     </div>
                   </CardContent>

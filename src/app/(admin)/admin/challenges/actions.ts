@@ -45,10 +45,11 @@ export async function createChallenge(data: {
   endDate: string;
 }) {
   try {
-    const description = (data.description ?? "").slice(0, 50);
+    const title = data.title.slice(0, 30);
+    const description = (data.description ?? "").slice(0, 100);
 
     await db.insert(schema.challenge).values({
-      title: data.title,
+      title,
       description,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
@@ -75,12 +76,13 @@ export async function updateChallenge(
   }
 ) {
   try {
-    const description = data.description?.slice(0, 50);
+    const title = data.title ? data.title.slice(0, 30) : undefined;
+    const description = data.description?.slice(0, 100);
 
     await db
       .update(schema.challenge)
       .set({
-        ...(data.title && { title: data.title }),
+        ...(title && { title }),
         ...(description !== undefined && { description }),
         ...(data.startDate && { startDate: new Date(data.startDate) }),
         ...(data.endDate && { endDate: new Date(data.endDate) }),

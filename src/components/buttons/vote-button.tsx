@@ -7,16 +7,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { voteAction } from "@/app/(user)/challenges/[id]/actions";
 import { useRouter } from "next/navigation";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface VoteButtonProps {
   photoId: string;
@@ -68,24 +59,16 @@ export function VoteButton({
 
   return (
     <>
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("dialogTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("dialogDescription")}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>
-              {t("cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction disabled={isPending} onClick={executeVote}>
-              {isPending ? t("switching") : t("switchVote")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={t("dialogTitle")}
+        description={t("dialogDescription")}
+        cancelLabel={t("cancel")}
+        confirmLabel={isPending ? t("switching") : t("switchVote")}
+        onConfirm={executeVote}
+        isPending={isPending}
+      />
 
       <Button
         onClick={handleClick}

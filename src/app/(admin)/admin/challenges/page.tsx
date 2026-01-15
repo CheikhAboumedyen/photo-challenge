@@ -7,17 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Calendar, Plus, Sparkles } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 function getStatus(startDate: Date, endDate: Date) {
   const now = new Date();
@@ -125,8 +115,8 @@ export default async function AdminChallengesPage() {
                     >
                       {t("editCta")}
                     </Link>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
+                    <ConfirmDialog
+                      trigger={
                         <Button
                           type="button"
                           variant="ghost"
@@ -134,39 +124,14 @@ export default async function AdminChallengesPage() {
                         >
                           {t("deleteCta")}
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            {t("deleteTitle")}
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {t("deleteDescription")}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>
-                            {t("cancelCta")}
-                          </AlertDialogCancel>
-                          <form action={deleteChallenge}>
-                            <input
-                              type="hidden"
-                              name="challengeId"
-                              value={ch.id}
-                            />
-                            <AlertDialogAction asChild>
-                              <Button
-                                type="submit"
-                                variant="destructive"
-                                className="bg-red-500 text-white hover:bg-red-400"
-                              >
-                                {t("confirmDeleteCta")}
-                              </Button>
-                            </AlertDialogAction>
-                          </form>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                      }
+                      title={t("deleteTitle")}
+                      description={t("deleteDescription")}
+                      cancelLabel={t("cancelCta")}
+                      confirmLabel={t("confirmDeleteCta")}
+                      formAction={deleteChallenge}
+                      hiddenInputs={[{ name: "challengeId", value: ch.id }]}
+                    />
                   </CardContent>
                 </Card>
               );

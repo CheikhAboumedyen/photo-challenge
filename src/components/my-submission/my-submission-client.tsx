@@ -1,17 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
@@ -98,32 +88,22 @@ export default function MySubmissionClient({
           </div>
 
           <div className="pt-2">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
+            <ConfirmDialog
+              trigger={
                 <Button
                   variant="outline"
                   className="rounded-full border border-white/30 bg-transparent text-white/80 hover:bg-white/10"
-                  disabled={isDeleting}
                 >
-                  {isDeleting ? "Deleting..." : "Delete"}
+                  Delete
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. Are you sure you want to
-                    delete this photo?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              }
+              title="Confirm Deletion"
+              description="This action cannot be undone. Are you sure you want to delete this photo?"
+              cancelLabel="Cancel"
+              confirmLabel="Delete"
+              onConfirm={handleDelete}
+              isPending={isDeleting}
+            />
           </div>
         </div>
       </div>

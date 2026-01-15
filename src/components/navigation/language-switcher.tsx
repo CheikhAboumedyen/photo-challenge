@@ -4,6 +4,7 @@
 import { Check, Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,6 +31,22 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const locale = useLocale() as Locale;
   const router = useRouter();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [triggerWidth, setTriggerWidth] = useState<number | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (triggerRef.current) {
+        setTriggerWidth(triggerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const handleChange = (nextLocale: Locale) => {
     if (nextLocale === locale) return;
@@ -45,6 +62,7 @@ export function LanguageSwitcher({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
+          ref={triggerRef}
           variant="secondary"
           size={isFull ? "default" : "sm"}
           className={cn(
@@ -57,8 +75,12 @@ export function LanguageSwitcher({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="end"
-        className="min-w-[140px] border border-white/15 bg-nav-surface/95 text-xs text-white/80"
+        align={isFull ? "start" : "end"}
+        style={triggerWidth ? { width: `${triggerWidth}px` } : undefined}
+        className={cn(
+          "border border-white/15 bg-nav-surface/95 backdrop-blur-sm shadow-lg rounded-lg",
+          isFull ? "w-full min-w-0" : "min-w-[140px]"
+        )}
       >
         {locales.map((item) => {
           const isActive = item === locale;
@@ -66,10 +88,20 @@ export function LanguageSwitcher({
             <DropdownMenuItem
               key={item}
               onClick={() => handleChange(item)}
-              className="flex items-center gap-2 px-3 py-2 text-sm uppercase bg-transparent cursor-pointer data-highlighted:bg-white/10 data-highlighted:text-white"
+              className={cn(
+                "flex items-center justify-between gap-2 px-3 py-2.5 text-sm uppercase rounded-md transition-colors",
+                "bg-transparent cursor-pointer",
+                "hover:bg-white/10 hover:text-white",
+                "focus:bg-white/10 focus:text-white",
+                "data-highlighted:bg-white/10 data-highlighted:text-white",
+                isActive && "text-white font-medium"
+              )}
             >
-              <span>{LANGUAGE_LABELS[item]}</span>
-              {isActive && <Check className="ml-auto h-3 w-3" />}
+              <span className="flex items-center gap-2">
+                <Languages className="h-3.5 w-3.5 opacity-70" />
+                <span>{LANGUAGE_LABELS[item]}</span>
+              </span>
+              {isActive && <Check className="h-4 w-4 text-white" />}
             </DropdownMenuItem>
           );
         })}

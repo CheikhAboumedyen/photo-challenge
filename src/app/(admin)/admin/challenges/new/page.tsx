@@ -30,7 +30,12 @@ export default function NewChallengePage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    const limitedValue = name === "description" ? value.slice(0, 50) : value;
+    let limitedValue = value;
+    if (name === "title") {
+      limitedValue = value.slice(0, 30);
+    } else if (name === "description") {
+      limitedValue = value.slice(0, 100);
+    }
     setFormData((prev) => ({ ...prev, [name]: limitedValue }));
   };
 
@@ -92,8 +97,12 @@ export default function NewChallengePage() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder={t("placeholderTitle")}
+                maxLength={30}
                 className="h-12 border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
+              <p className="text-xs text-white/60">
+                {formData.title.length} / 30
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -106,11 +115,11 @@ export default function NewChallengePage() {
                 value={formData.description}
                 onChange={handleChange}
                 placeholder={t("placeholderDescription")}
-                maxLength={50}
+                maxLength={100}
                 className="min-h-[140px] border-nav-border/50 bg-transparent text-white placeholder:text-white/50 focus-visible:border-brand-primary focus-visible:ring-brand-primary/40"
               />
               <p className="text-xs text-white/60">
-                {formData.description.length} / 50
+                {formData.description.length} / 100
               </p>
             </div>
 
